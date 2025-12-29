@@ -6,9 +6,9 @@
 
 namespace ApplesGame
 {
-	void InitUI(UI& uI, Game& game)
+	void InitUI(UI& uI, const Game& game)
 	{
-		// Init Title
+		// Init Menu Title
 		uI.title.setString("Apples Game!");
 		uI.title.setFont(game.font);
 		uI.title.setStyle(sf::Text::Bold);
@@ -17,15 +17,18 @@ namespace ApplesGame
 		SetTextRelativeOrigin(uI.title, 0.5f, 0.5f);
 		SetTextScreenRelativePosition(uI.title, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.2f);
 
-		// Init Under title
-		uI.underTitle.setString("Use Arrows to control");
-		uI.underTitle.setFont(game.font);
-		uI.underTitle.setCharacterSize(25);
-		uI.underTitle.setFillColor(sf::Color::Yellow);
-		SetTextRelativeOrigin(uI.underTitle, 0.5f, 0.5f);
-		SetTextScreenRelativePosition(uI.underTitle, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.4f);
+		// Init Menu Items
+		for (int i = 0; i < NUM_MENU_ITEMS; i++)
+		{
+			uI.menuItems[i].text.setString("Item " + std::to_string(i));
+			uI.menuItems[i].text.setFont(game.font);
+			uI.menuItems[i].text.setCharacterSize(40);
+			uI.menuItems[i].text.setFillColor(sf::Color::Yellow);
+			SetTextRelativeOrigin(uI.menuItems[i].text, 0.5f, 0.5f);
+			SetTextScreenRelativePosition(uI.menuItems[i].text, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.4f);
+			ShiftTextPozition(uI.menuItems[i].text, 0.f, 60.f * i);
+		}
 
-		//Hello
 		// Init Score
 		uI.score.setString("Apples Eaten:");
 		uI.score.setFont(game.font);
@@ -34,37 +37,18 @@ namespace ApplesGame
 		SetTextRelativeOrigin(uI.score, 0.f, 0.f);
 		SetTextScreenRelativePosition(uI.score, SCREEN_WIDTH, SCREEN_HEIGHT, 0.01f, 0.01f);
 
-		// Init Call to action
-		uI.callToAction.setString("Press SPACE to start");
-		uI.callToAction.setFont(game.font);
-		uI.callToAction.setCharacterSize(30);
-		uI.callToAction.setFillColor(sf::Color::Yellow);
-		SetTextRelativeOrigin(uI.callToAction, 0.5f, 0.5f);
-		SetTextScreenRelativePosition(uI.callToAction, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.7f);
-
 		//Init tint
 		uI.tint.setFillColor(sf::Color(0, 0, 0, 180));
 		uI.tint.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 	}
 
-	void UpdateUI(UI& uI, const Game& game, float currentTime)
+	void UpdateUI(UI& uI, const Game& game, const float currentTime)
 	{
 		switch(game.gameState)
 		{
-		case GameState::Welcome:
+		case GameState::MainMenu:
 		{
-			UpdateTextAndPosition(uI.title, "Apples Game!");
-			UpdateTextAndPosition(uI.underTitle, "Use Arrows to control, eat apples, avoid stones and borders");
-			UpdateTextAndPosition(uI.callToAction, "Press SPACE to start");
-
-			if ((int)currentTime % 2 == 0)
-			{
-				uI.callToAction.setFillColor(sf::Color::Yellow);
-			}
-			else
-			{
-				uI.callToAction.setFillColor(sf::Color::Red);
-			}
+			UpdateMenu(uI);
 			break;
 		}
 		case GameState::GameLoop:
@@ -74,17 +58,7 @@ namespace ApplesGame
 		}
 		case GameState::GameOver:
 		{
-			UpdateTextAndPosition(uI.title, "GAME OVER");
-			UpdateTextAndPosition(uI.underTitle, "Final score: " + std::to_string(game.numEatenApples));
-			UpdateTextAndPosition(uI.callToAction, "Press SPACE to restart");
-			if ((int)currentTime % 2 == 0)
-			{
-				uI.callToAction.setFillColor(sf::Color::Yellow);
-			}
-			else
-			{
-				uI.callToAction.setFillColor(sf::Color::Red);
-			}
+			UpdateMenu(uI);
 			break;
 		}
 		};
@@ -94,11 +68,16 @@ namespace ApplesGame
 	{
 		switch (game.gameState)
 		{
-		case GameState::Welcome:
+		case GameState::MainMenu:
 		{
 			window.draw(uI.title);
-			window.draw(uI.underTitle);
-			window.draw(uI.callToAction);
+			for (int i = 0; i < NUM_MENU_ITEMS; i++)
+			{
+				if (uI.menuItems[i].isActive)
+				{
+					window.draw(uI.menuItems[i].text);
+				}
+			}
 			break;
 		}
 		case GameState::GameLoop:
@@ -108,22 +87,84 @@ namespace ApplesGame
 		}
 		case GameState::GameOver:
 		{
-			window.draw(uI.tint);
+			window.draw(uI.tint); 
 			window.draw(uI.title);
-			window.draw(uI.underTitle);
-			window.draw(uI.callToAction);
+			for (int i = 0; i < NUM_MENU_ITEMS; i++)
+			{
+				if (uI.menuItems[i].isActive)
+				{
+					window.draw(uI.menuItems[i].text);
+				}
+			}
 			break;
 		}
 		};
 	}
 
-	void UpdateTextAndPosition(sf::Text& text, std::string string)
+	void UpdateTextAndPosition(sf::Text& text, const std::string string)
 	{
 		Vector2D relativePosition = GetTextScreenRelativePosition(text, SCREEN_WIDTH, SCREEN_HEIGHT);
 		Vector2D relativeOrigin = GetTextRelativeOrigin(text);
 		text.setString(string);
 		SetTextRelativeOrigin(text, relativeOrigin.x, relativeOrigin.y);
 		SetTextScreenRelativePosition(text, SCREEN_WIDTH, SCREEN_HEIGHT, relativePosition.x, relativePosition.y);
+	}
+
+	void SetMenuState(UI& uI, const MenuState& menuState)
+	{
+		uI.menuState = menuState;
+		uI.menuSelectedItem = 0;
+		UpdateMenu(uI);
+	}
+
+	void UpdateMenu(UI& uI)
+	{
+		for (int i = 0; i < NUM_MENU_ITEMS; i++)
+		{
+			uI.menuItems[i].isActive = false;
+			uI.menuItems[i].text.setFillColor(sf::Color::Yellow);
+		}
+		uI.menuSelectedItem = uI.menuSelectedItem % NUM_MENU_ITEMS;
+		uI.menuItems[uI.menuSelectedItem].text.setFillColor(sf::Color::Red);
+
+		switch (uI.menuState)
+		{
+		case MenuState::MainMenu:
+		{
+			UpdateTextAndPosition(uI.title, "Apples Game!");
+			SetMenuItem(uI.menuItems[0], "Start game", MenuEvent::StartGame);
+			SetMenuItem(uI.menuItems[1], "Exit game", MenuEvent::ExitGame);
+			break;
+		}
+		case MenuState::GameOverMenu:
+		{
+			UpdateTextAndPosition(uI.title, "GAME OVER");
+			SetMenuItem(uI.menuItems[0], "Restart game", MenuEvent::StartGame);
+			SetMenuItem(uI.menuItems[1], "Back to main menu", MenuEvent::BackMainMenu);
+			SetMenuItem(uI.menuItems[2], "Exit game", MenuEvent::ExitGame);
+			break;
+		}
+		}
+	}
+
+	MenuEvent SelectMenuItem(UI& uI)
+	{
+		uI.menuSelectedItem = uI.menuSelectedItem % NUM_MENU_ITEMS;
+		return uI.menuItems[uI.menuSelectedItem].event;
+	}
+
+	void MoveMenuUp(UI& uI)
+	{
+		do {
+			uI.menuSelectedItem = (uI.menuSelectedItem - 1 + NUM_MENU_ITEMS) % NUM_MENU_ITEMS;
+		} while (!uI.menuItems[uI.menuSelectedItem].isActive);
+	}
+
+	void MoveMenuDown(UI& uI)
+	{
+		do {
+			uI.menuSelectedItem = (uI.menuSelectedItem + 1) % NUM_MENU_ITEMS;
+		} while (!uI.menuItems[uI.menuSelectedItem].isActive);
 	}
 }
 

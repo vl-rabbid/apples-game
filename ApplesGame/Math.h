@@ -34,4 +34,6 @@ namespace ApplesGame
 	void SetTextScreenRelativePosition(sf::Text& text, float screenWidth, float screenHeight, float relativePositionX, float relativePositionY);
 
 	Vector2D GetTextScreenRelativePosition(sf::Text& text, float screenWidth, float screenHeight);
+
+	void ShiftTextPozition(sf::Text& text, float shiftX, float shiftY);
 }

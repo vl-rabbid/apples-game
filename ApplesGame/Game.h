@@ -11,7 +11,7 @@ namespace ApplesGame
 {
 	enum class GameState
 	{
-		Welcome = 0,
+		MainMenu = 0,
 		GameLoop,
 		GameOver
 	};
@@ -19,7 +19,7 @@ namespace ApplesGame
 	struct Game
 	{
 		// Global game data
-		GameState gameState = GameState::Welcome;
+		GameState gameState = GameState::MainMenu;
 		int numEatenApples = 0;
 
 		//Resources
@@ -37,17 +37,23 @@ namespace ApplesGame
 		sf::Font font;
 	};
 
-	void PlaySound(Game& game, sf::SoundBuffer& soundBuffer);
+	void PlaySound(Game& game, const sf::SoundBuffer& soundBuffer);
 
-	void RestartGame(Game& game);
+	void SetGameState(Game& game, const GameState& gameState);
 
 	void InitGame(Game& game);
 
-	void HandleImput(Game& game);
+	void HandleImput(Game& game, const sf::Event& event, sf::RenderWindow& window);
 
-	void UpdateGame(Game& game, float deltaTime, float currentTime);
+	void UpdateGame(Game& game, const float deltaTime, const float currentTime);
 
 	void DrawGame(Game& game, sf::RenderWindow& window);
+
+	void UpdateGameLoop(Game& game, const float deltaTime);
+
+	void DrawGameLoop(Game& game, sf::RenderWindow& window);
+
+	void HandleMenuImput(Game& game, const sf::Event& event, sf::RenderWindow& window);
 
 	void DeinitializeGame(Game& game);
 }

@@ -39,13 +39,9 @@ int main()
 				window.close();
 				break;
 			}
-			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-			{
-				window.close();
-				break;
-			}
+			
+			HandleImput(game, event, window);
 		}
-		HandleImput(game);
 
 		UpdateGame(game, deltaTime, currentTime);
 
@@ -53,7 +49,6 @@ int main()
 		window.clear();
 		DrawGame(game, window);
 		window.display();
-		
 	}
 
 	// Deinitialization
