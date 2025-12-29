@@ -26,12 +26,14 @@ namespace ApplesGame
 			+ (circ1Position.y - circ2Position.y) * (circ1Position.y - circ2Position.y);
 		return (distanceSqr <= (circ1Radius + circ2Radius) * (circ1Radius + circ2Radius));
 	}
+
 	void SetSpriteSize(sf::Sprite& sprite, float desiredWidth, float desiredHeight)
 	{
 		sf::FloatRect spriteRect = sprite.getLocalBounds();
 		sf::Vector2f scale = { desiredWidth / spriteRect.width, desiredHeight / spriteRect.height};
 		sprite.setScale(scale);
 	}
+
 	void SetSpriteRelativeOrigin(sf::Sprite& sprite, float originX, float originY)
 	{
 		sf::FloatRect spriteRect = sprite.getLocalBounds();
@@ -69,5 +71,13 @@ namespace ApplesGame
 		relativePosition.x = position.x / screenWidth;
 		relativePosition.y = position.y / screenHeight;
 		return relativePosition;
+	}
+
+	void ShiftTextPozition(sf::Text& text, float shiftX, float shiftY)
+	{
+		sf::Vector2f position = text.getPosition();
+		position.x += shiftX;
+		position.y += shiftY;
+		text.setPosition(position);
 	}
 }

@@ -13,4 +13,5 @@ namespace ApplesGame
 	const float APPLE_SIZE = 20.f;
 	const int NUM_STONES = 10;
 	const float STONE_SIZE = 15.f;
+	const int NUM_MENU_ITEMS = 5;
 }

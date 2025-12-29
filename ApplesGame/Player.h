@@ -17,7 +17,7 @@ namespace ApplesGame
 	{
 		Position2D position;
 		float speed;
-		PlayerDirection direction;
+		PlayerDirection direction{};
 		sf::Sprite sprite;
 	};
 
