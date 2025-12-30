@@ -8,6 +8,7 @@ namespace ApplesGame
 	{
 		Nothing = 0,
 		StartGame,
+		ContinueGame,
 		ExitGame,
 		BackMainMenu
 	};
@@ -15,6 +16,7 @@ namespace ApplesGame
 	enum class MenuState
 	{
 		MainMenu = 0,
+		PauseMenu,
 		GameOverMenu
 	};
 

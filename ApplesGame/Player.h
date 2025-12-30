@@ -27,6 +27,8 @@ namespace ApplesGame
 
 	void DrawPlayer(Player& player, sf::RenderWindow& window);
 
+	void HandlePlayerMovementInput(Player& player, const sf::Event& event);
+
 	void UpdatePlayerSprite(Player& player);
 
 	void UpdatePlayerPosition(Player& player, const float deltaTime);

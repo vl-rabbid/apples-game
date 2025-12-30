@@ -13,6 +13,7 @@ namespace ApplesGame
 	{
 		MainMenu = 0,
 		GameLoop,
+		Pause,
 		GameOver
 	};
 
@@ -41,19 +42,23 @@ namespace ApplesGame
 
 	void SetGameState(Game& game, const GameState& gameState);
 
-	void InitGame(Game& game);
-
 	void HandleImput(Game& game, const sf::Event& event, sf::RenderWindow& window);
 
 	void UpdateGame(Game& game, const float deltaTime, const float currentTime);
 
 	void DrawGame(Game& game, sf::RenderWindow& window);
 
+	void InitGame(Game& game);
+
+	void RestartGame(Game& game);
+
 	void UpdateGameLoop(Game& game, const float deltaTime);
 
 	void DrawGameLoop(Game& game, sf::RenderWindow& window);
 
 	void HandleMenuImput(Game& game, const sf::Event& event, sf::RenderWindow& window);
+
+	void HandleMenuEvent(Game& game, const MenuEvent& menuEvent, sf::RenderWindow& window);
 
 	void DeinitializeGame(Game& game);
 }

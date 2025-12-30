@@ -22,22 +22,106 @@ namespace ApplesGame
 		}
 		case GameState::GameLoop:
 		{
-			game.numEatenApples = 0;
-
-			InitPlayer(game.player, game);
-			for (int i = 0; i < NUM_APPLES; ++i)
-			{
-				InitApple(game.apples[i], game);
-			}
-			for (int i = 0; i < NUM_STONES; ++i)
-			{
-				InitStone(game.stones[i], game);
-			}
 			break;
-		}case GameState::GameOver:
+		}
+		case GameState::Pause:
+		{
+			SetMenuState(game.uI, MenuState::PauseMenu);
+			break;
+		}
+		case GameState::GameOver:
 		{
 			PlaySound(game, game.deathSound);
 			SetMenuState(game.uI, MenuState::GameOverMenu);
+			break;
+		}
+		}
+	}
+
+	void HandleImput(Game& game, const sf::Event& event, sf::RenderWindow& window)
+	{
+		switch (game.gameState)
+		{
+		case GameState::MainMenu:
+		{
+			HandleMenuImput(game, event, window);
+			break;
+		}
+		case GameState::GameLoop:
+		{
+			HandlePlayerMovementInput(game.player, event);
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+			{
+				SetGameState(game, GameState::Pause);
+			}
+			break;
+		}
+		case GameState::Pause:
+		{
+			HandleMenuImput(game, event, window);
+			break;
+		}
+		case GameState::GameOver:
+		{
+			HandleMenuImput(game, event, window);
+			break;
+		}
+		};
+	}
+
+	void UpdateGame(Game& game, const float deltaTime, const float currentTime)
+	{
+		switch (game.gameState)
+		{
+		case GameState::MainMenu:
+		{
+			UpdateMenu(game.uI);
+			break;
+		}
+		case GameState::GameLoop:
+		{
+			UpdateGameLoop(game, deltaTime);
+			UpdateHUD(game.uI, game);
+			break;
+		}
+		case GameState::Pause:
+		{
+			UpdateMenu(game.uI);
+			break;
+		}
+		case GameState::GameOver:
+		{
+			UpdateMenu(game.uI);
+			break;
+		}
+		}
+	}
+
+	void DrawGame(Game& game, sf::RenderWindow& window)
+	{
+		switch (game.gameState)
+		{
+		case GameState::MainMenu:
+		{
+			DrawMenu(game.uI, window);
+			break;
+		}
+		case GameState::GameLoop:
+		{
+			DrawGameLoop(game, window);
+			DrawHUD(game.uI, window);
+			break;
+		}
+		case GameState::Pause:
+		{
+			DrawGameLoop(game, window);
+			DrawMenu(game.uI, window);
+			break;
+		}
+		case GameState::GameOver:
+		{
+			DrawGameLoop(game, window);
+			DrawMenu(game.uI, window);
 			break;
 		}
 		}
@@ -63,87 +147,18 @@ namespace ApplesGame
 		SetGameState(game, GameState::MainMenu);
 	}
 
-	void HandleImput(Game& game, const sf::Event& event, sf::RenderWindow& window)
+	void RestartGame(Game& game)
 	{
-		switch (game.gameState)
-		{
-		case GameState::MainMenu:
-		{
-			HandleMenuImput(game, event, window);
-			break;
-		}
-		case GameState::GameLoop:
-		{
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			{
-				game.player.direction = PlayerDirection::Right;
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			{
-				game.player.direction = PlayerDirection::Up;
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			{
-				game.player.direction = PlayerDirection::Left;
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-			{
-				game.player.direction = PlayerDirection::Down;
-			}
-			break;
-		}
-		case GameState::GameOver:
-		{
-			HandleMenuImput(game, event, window);
-			break;
-		}
-		};
-	}
+		game.numEatenApples = 0;
 
-	void UpdateGame(Game& game, const float deltaTime, const float currentTime)
-	{
-		switch (game.gameState)
+		InitPlayer(game.player, game);
+		for (int i = 0; i < NUM_APPLES; ++i)
 		{
-		case GameState::MainMenu:
-		{
-			UpdateUI(game.uI, game, currentTime);
-			break;
+			InitApple(game.apples[i], game);
 		}
-		case GameState::GameLoop:
+		for (int i = 0; i < NUM_STONES; ++i)
 		{
-			UpdateGameLoop(game, deltaTime);
-			UpdateUI(game.uI, game, currentTime);
-			break;
-		}
-		case GameState::GameOver:
-		{
-			UpdateUI(game.uI, game, currentTime);
-			break;
-		}
-		}
-	}
-
-	void DrawGame(Game& game, sf::RenderWindow& window)
-	{
-		switch (game.gameState)
-		{
-		case GameState::MainMenu:
-		{
-			DrawUI(game.uI, window, game);
-			break;
-		}
-		case GameState::GameLoop:
-		{
-			DrawGameLoop(game, window);
-			DrawUI(game.uI, window, game);
-			break;
-		}
-		case GameState::GameOver:
-		{
-			DrawGameLoop(game, window);
-			DrawUI(game.uI, window, game);
-			break;
-		}
+			InitStone(game.stones[i], game);
 		}
 	}
 
@@ -207,24 +222,45 @@ namespace ApplesGame
 		}
 		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)
 		{
-			menuEvent = SelectMenuItem(game.uI);
+			menuEvent = GetMenuEvent(game.uI);
 		}
 		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
 		{
-			menuEvent = SelectMenuItem(game.uI);
+			menuEvent = GetMenuEvent(game.uI);
 		}
 
-		if (menuEvent == MenuEvent::StartGame)
+		HandleMenuEvent(game, menuEvent, window);
+	}
+
+	void HandleMenuEvent(Game& game, const MenuEvent& menuEvent, sf::RenderWindow& window)
+	{
+		switch (menuEvent)
+		{
+		case MenuEvent::Nothing:
+		{
+			break;
+		}
+		case MenuEvent::StartGame:
 		{
 			SetGameState(game, GameState::GameLoop);
+			RestartGame(game);
+			break;
 		}
-		else if (menuEvent == MenuEvent::ExitGame)
+		case MenuEvent::ContinueGame:
+		{
+			SetGameState(game, GameState::GameLoop);
+			break;
+		}
+		case MenuEvent::ExitGame:
 		{
 			window.close();
+			break;
 		}
-		else if (menuEvent == MenuEvent::BackMainMenu)
+		case MenuEvent::BackMainMenu:
 		{
 			SetGameState(game, GameState::MainMenu);
+			break;
+		}
 		}
 	}
 

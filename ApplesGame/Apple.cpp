@@ -6,6 +6,7 @@ namespace ApplesGame
 {
 	void InitApple(Apple& apple, const Game& game)
 	{
+		// Init apple vars
 		apple.position = GetRandomPositionInScreen(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		// Init apple sprite
