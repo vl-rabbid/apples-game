@@ -4,6 +4,15 @@
 
 namespace ApplesGame
 {
+	bool IsGameRunning(Game& game)
+	{
+		if (game.gameState == GameState::ExitGame)
+		{
+			return false;
+		}
+		return true;
+	}
+
 	void PlaySound(Game& game, const sf::SoundBuffer& soundBuffer)
 	{
 		game.sound.setBuffer(soundBuffer);
@@ -35,16 +44,26 @@ namespace ApplesGame
 			SetMenuState(game.uI, MenuState::GameOverMenu);
 			break;
 		}
+		case GameState::ExitGame:
+		{
+			break;
+		}
 		}
 	}
 
-	void HandleImput(Game& game, const sf::Event& event, sf::RenderWindow& window)
+	void HandleImputAndEvents(Game& game, const sf::Event& event)
 	{
+		if (event.type == sf::Event::Closed)
+		{
+			SetGameState(game, GameState::ExitGame);
+			return;
+		}
+
 		switch (game.gameState)
 		{
 		case GameState::MainMenu:
 		{
-			HandleMenuImput(game, event, window);
+			HandleMenuImput(game, event);
 			break;
 		}
 		case GameState::GameLoop:
@@ -58,24 +77,24 @@ namespace ApplesGame
 		}
 		case GameState::Pause:
 		{
-			HandleMenuImput(game, event, window);
+			HandleMenuImput(game, event);
 			break;
 		}
 		case GameState::GameOver:
 		{
-			HandleMenuImput(game, event, window);
+			HandleMenuImput(game, event);
 			break;
 		}
 		};
 	}
 
-	void UpdateGame(Game& game, const float deltaTime, const float currentTime)
+	void UpdateGame(Game& game, const float deltaTime)
 	{
 		switch (game.gameState)
 		{
 		case GameState::MainMenu:
 		{
-			UpdateMenu(game.uI);
+			UpdateMenu(game.uI, game);
 			break;
 		}
 		case GameState::GameLoop:
@@ -86,12 +105,12 @@ namespace ApplesGame
 		}
 		case GameState::Pause:
 		{
-			UpdateMenu(game.uI);
+			UpdateMenu(game.uI, game);
 			break;
 		}
 		case GameState::GameOver:
 		{
-			UpdateMenu(game.uI);
+			UpdateMenu(game.uI, game);
 			break;
 		}
 		}
@@ -208,7 +227,7 @@ namespace ApplesGame
 		DrawPlayer(game.player, window);
 	}
 
-	void HandleMenuImput(Game& game, const sf::Event& event, sf::RenderWindow& window)
+	void HandleMenuImput(Game& game, const sf::Event& event)
 	{
 		MenuEvent menuEvent = MenuEvent::Nothing;
 
@@ -229,10 +248,10 @@ namespace ApplesGame
 			menuEvent = GetMenuEvent(game.uI);
 		}
 
-		HandleMenuEvent(game, menuEvent, window);
+		HandleMenuEvent(game, menuEvent);
 	}
 
-	void HandleMenuEvent(Game& game, const MenuEvent& menuEvent, sf::RenderWindow& window)
+	void HandleMenuEvent(Game& game, const MenuEvent& menuEvent)
 	{
 		switch (menuEvent)
 		{
@@ -253,7 +272,7 @@ namespace ApplesGame
 		}
 		case MenuEvent::ExitGame:
 		{
-			window.close();
+			SetGameState(game, GameState::ExitGame);
 			break;
 		}
 		case MenuEvent::BackMainMenu:
@@ -264,8 +283,8 @@ namespace ApplesGame
 		}
 	}
 
-	void DeinitializeGame(Game& game)
+	void DeinitializeGame(Game& game, sf::RenderWindow& window)
 	{
-
+		window.close();
 	}
 }

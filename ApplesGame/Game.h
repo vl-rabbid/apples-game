@@ -14,7 +14,8 @@ namespace ApplesGame
 		MainMenu = 0,
 		GameLoop,
 		Pause,
-		GameOver
+		GameOver,
+		ExitGame
 	};
 
 	struct Game
@@ -38,13 +39,15 @@ namespace ApplesGame
 		sf::Font font;
 	};
 
+	bool IsGameRunning(Game& game);
+
 	void PlaySound(Game& game, const sf::SoundBuffer& soundBuffer);
 
 	void SetGameState(Game& game, const GameState& gameState);
 
-	void HandleImput(Game& game, const sf::Event& event, sf::RenderWindow& window);
+	void HandleImputAndEvents(Game& game, const sf::Event& event);
 
-	void UpdateGame(Game& game, const float deltaTime, const float currentTime);
+	void UpdateGame(Game& game, const float deltaTime);
 
 	void DrawGame(Game& game, sf::RenderWindow& window);
 
@@ -56,9 +59,9 @@ namespace ApplesGame
 
 	void DrawGameLoop(Game& game, sf::RenderWindow& window);
 
-	void HandleMenuImput(Game& game, const sf::Event& event, sf::RenderWindow& window);
+	void HandleMenuImput(Game& game, const sf::Event& event);
 
-	void HandleMenuEvent(Game& game, const MenuEvent& menuEvent, sf::RenderWindow& window);
+	void HandleMenuEvent(Game& game, const MenuEvent& menuEvent);
 
-	void DeinitializeGame(Game& game);
+	void DeinitializeGame(Game& game, sf::RenderWindow& window);
 }
