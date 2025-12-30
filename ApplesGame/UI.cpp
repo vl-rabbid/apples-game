@@ -42,79 +42,14 @@ namespace ApplesGame
 		uI.tint.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 	}
 
-	void UpdateUI(UI& uI, const Game& game, const float currentTime)
+	void UpdateHUD(UI& uI, const Game& game)
 	{
-		switch(game.gameState)
-		{
-		case GameState::MainMenu:
-		{
-			UpdateMenu(uI);
-			break;
-		}
-		case GameState::GameLoop:
-		{
-			UpdateTextAndPosition(uI.score, "Apples Eaten: " + std::to_string(game.numEatenApples));
-			break;
-		}
-		case GameState::GameOver:
-		{
-			UpdateMenu(uI);
-			break;
-		}
-		};
+		UpdateTextAndPosition(uI.score, "Apples Eaten: " + std::to_string(game.numEatenApples));
 	}
 
-	void DrawUI(UI& uI, sf::RenderWindow& window, const Game& game)
+	void DrawHUD(UI& uI, sf::RenderWindow& window)
 	{
-		switch (game.gameState)
-		{
-		case GameState::MainMenu:
-		{
-			window.draw(uI.title);
-			for (int i = 0; i < NUM_MENU_ITEMS; i++)
-			{
-				if (uI.menuItems[i].isActive)
-				{
-					window.draw(uI.menuItems[i].text);
-				}
-			}
-			break;
-		}
-		case GameState::GameLoop:
-		{
-			window.draw(uI.score);
-			break;
-		}
-		case GameState::GameOver:
-		{
-			window.draw(uI.tint); 
-			window.draw(uI.title);
-			for (int i = 0; i < NUM_MENU_ITEMS; i++)
-			{
-				if (uI.menuItems[i].isActive)
-				{
-					window.draw(uI.menuItems[i].text);
-				}
-			}
-			break;
-		}
-		};
-	}
-
-	void UpdateTextAndPosition(sf::Text& text, const std::string string)
-	{
-		Vector2D relativePosition = GetTextScreenRelativePosition(text, SCREEN_WIDTH, SCREEN_HEIGHT);
-		Vector2D relativeOrigin = GetTextRelativeOrigin(text);
-		text.setString(string);
-		SetTextRelativeOrigin(text, relativeOrigin.x, relativeOrigin.y);
-		SetTextScreenRelativePosition(text, SCREEN_WIDTH, SCREEN_HEIGHT, relativePosition.x, relativePosition.y);
-	}
-
-	void SetMenuState(UI& uI, const MenuState& menuState)
-	{
-		uI.menuState = menuState;
-		uI.menuSelectedItem = 0;
-		UpdateMenu(uI);
+		window.draw(uI.score);
 	}
 
 	void UpdateMenu(UI& uI)
@@ -136,6 +71,15 @@ namespace ApplesGame
 			SetMenuItem(uI.menuItems[1], "Exit game", MenuEvent::ExitGame);
 			break;
 		}
+		case MenuState::PauseMenu:
+		{
+			UpdateTextAndPosition(uI.title, "Pause");
+			SetMenuItem(uI.menuItems[0], "Continue game", MenuEvent::ContinueGame);
+			SetMenuItem(uI.menuItems[1], "Restart game", MenuEvent::StartGame);
+			SetMenuItem(uI.menuItems[2], "Back to main menu", MenuEvent::BackMainMenu);
+			SetMenuItem(uI.menuItems[3], "Exit game", MenuEvent::ExitGame);
+			break;
+		}
 		case MenuState::GameOverMenu:
 		{
 			UpdateTextAndPosition(uI.title, "GAME OVER");
@@ -147,7 +91,36 @@ namespace ApplesGame
 		}
 	}
 
-	MenuEvent SelectMenuItem(UI& uI)
+	void DrawMenu(UI& uI, sf::RenderWindow& window)
+	{
+		window.draw(uI.tint);
+		window.draw(uI.title);
+		for (int i = 0; i < NUM_MENU_ITEMS; i++)
+		{
+			if (uI.menuItems[i].isActive)
+			{
+				window.draw(uI.menuItems[i].text);
+			}
+		}
+	}
+
+	void UpdateTextAndPosition(sf::Text& text, const std::string string)
+	{
+		Vector2D relativePosition = GetTextScreenRelativePosition(text, SCREEN_WIDTH, SCREEN_HEIGHT);
+		Vector2D relativeOrigin = GetTextRelativeOrigin(text);
+		text.setString(string);
+		SetTextRelativeOrigin(text, relativeOrigin.x, relativeOrigin.y);
+		SetTextScreenRelativePosition(text, SCREEN_WIDTH, SCREEN_HEIGHT, relativePosition.x, relativePosition.y);
+	}
+
+	void SetMenuState(UI& uI, const MenuState& menuState)
+	{
+		uI.menuState = menuState;
+		uI.menuSelectedItem = 0;
+		UpdateMenu(uI);
+	}
+
+	MenuEvent GetMenuEvent(UI& uI)
 	{
 		uI.menuSelectedItem = uI.menuSelectedItem % NUM_MENU_ITEMS;
 		return uI.menuItems[uI.menuSelectedItem].event;

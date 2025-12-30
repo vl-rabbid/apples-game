@@ -8,6 +8,7 @@ namespace ApplesGame
 {
 	void InitPlayer(Player& player, const Game& game)
 	{
+		// Init player vars
 		player.position = { SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f };
 		player.speed = INITIAL_SPEED;
 		player.direction = PlayerDirection::Right;
@@ -23,6 +24,26 @@ namespace ApplesGame
 		UpdatePlayerSprite(player);
 		player.sprite.setPosition(player.position.x, player.position.y);
 		window.draw(player.sprite);
+	}
+
+	void HandlePlayerMovementInput(Player& player, const sf::Event& event)
+	{
+		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
+		{
+			player.direction = PlayerDirection::Right;
+		}
+		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up)
+		{
+			player.direction = PlayerDirection::Up;
+		}
+		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
+		{
+			player.direction = PlayerDirection::Left;
+		}
+		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down)
+		{
+			player.direction = PlayerDirection::Down;
+		}
 	}
 
 	void UpdatePlayerSprite(Player& player)

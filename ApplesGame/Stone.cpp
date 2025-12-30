@@ -6,6 +6,7 @@ namespace ApplesGame
 {
 	void InitStone(Stone& stone, const Game& game)
 	{
+		// Init stone vars
 		stone.position = GetRandomPositionInScreen(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		// Init stone sprite

@@ -22,17 +22,19 @@ namespace ApplesGame
 
 	void InitUI(UI& uI, const Game& game);
 
-	void UpdateUI(UI& uI, const Game& game, const float currentTime);
+	void UpdateHUD(UI& uI, const Game& game);
 
-	void DrawUI(UI& uI, sf::RenderWindow& window, const Game& game);
+	void DrawHUD(UI& uI, sf::RenderWindow& window);
+
+	void UpdateMenu(UI& uI);
+
+	void DrawMenu(UI& uI, sf::RenderWindow& window);
 
 	void UpdateTextAndPosition(sf::Text& text, const std::string string);
 
 	void SetMenuState(UI& uI, const MenuState& menuState);
 
-	void UpdateMenu(UI& uI);
-
-	MenuEvent SelectMenuItem(UI& uI);
+	MenuEvent GetMenuEvent(UI& uI);
 
 	void MoveMenuUp(UI& uI);
 
