@@ -20,7 +20,7 @@ int main()
 	InitGame(game);
 
 	// Main loop
-	while (window.isOpen())
+	while (IsGameRunning(game))
 	{
 		// Reduce framerate to not spam CPU and GPU
 		sf::sleep(sf::microseconds(16));
@@ -34,16 +34,10 @@ int main()
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
-			{
-				window.close();
-				break;
-			}
-			
-			HandleImput(game, event, window);
+			HandleImputAndEvents(game, event);
 		}
 
-		UpdateGame(game, deltaTime, currentTime);
+		UpdateGame(game, deltaTime);
 
 		// Draw game graphics
 		window.clear();
@@ -52,7 +46,7 @@ int main()
 	}
 
 	// Deinitialization
-	DeinitializeGame(game);
+	DeinitializeGame(game, window);
 
 	return 0;
 }

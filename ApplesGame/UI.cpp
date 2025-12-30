@@ -9,7 +9,7 @@ namespace ApplesGame
 	void InitUI(UI& uI, const Game& game)
 	{
 		// Init Menu Title
-		uI.title.setString("Apples Game!");
+		uI.title.setString("title");
 		uI.title.setFont(game.font);
 		uI.title.setStyle(sf::Text::Bold);
 		uI.title.setCharacterSize(90);
@@ -17,20 +17,28 @@ namespace ApplesGame
 		SetTextRelativeOrigin(uI.title, 0.5f, 0.5f);
 		SetTextScreenRelativePosition(uI.title, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.2f);
 
+		// Init Note
+		uI.note.setString("note");
+		uI.note.setFont(game.font);
+		uI.note.setCharacterSize(25);
+		uI.note.setFillColor(sf::Color::Yellow);
+		SetTextRelativeOrigin(uI.note, 0.5f, 0.5f);
+		SetTextScreenRelativePosition(uI.note, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.35f);
+
 		// Init Menu Items
 		for (int i = 0; i < NUM_MENU_ITEMS; i++)
 		{
-			uI.menuItems[i].text.setString("Item " + std::to_string(i));
+			uI.menuItems[i].text.setString("item " + std::to_string(i));
 			uI.menuItems[i].text.setFont(game.font);
 			uI.menuItems[i].text.setCharacterSize(40);
 			uI.menuItems[i].text.setFillColor(sf::Color::Yellow);
 			SetTextRelativeOrigin(uI.menuItems[i].text, 0.5f, 0.5f);
-			SetTextScreenRelativePosition(uI.menuItems[i].text, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.4f);
-			ShiftTextPozition(uI.menuItems[i].text, 0.f, 60.f * i);
+			SetTextScreenRelativePosition(uI.menuItems[i].text, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.5f);
+			ShiftTextPozition(uI.menuItems[i].text, 0.f, 50.f * i);
 		}
 
 		// Init Score
-		uI.score.setString("Apples Eaten:");
+		uI.score.setString("score");
 		uI.score.setFont(game.font);
 		uI.score.setCharacterSize(20);
 		uI.score.setFillColor(sf::Color::Yellow);
@@ -52,16 +60,41 @@ namespace ApplesGame
 		window.draw(uI.score);
 	}
 
-	void UpdateMenu(UI& uI)
+	void UpdateMenu(UI& uI, const Game& game)
 	{
 		for (int i = 0; i < NUM_MENU_ITEMS; i++)
 		{
-			uI.menuItems[i].isActive = false;
 			uI.menuItems[i].text.setFillColor(sf::Color::Yellow);
 		}
 		uI.menuSelectedItem = uI.menuSelectedItem % NUM_MENU_ITEMS;
 		uI.menuItems[uI.menuSelectedItem].text.setFillColor(sf::Color::Red);
 
+		switch (uI.menuState)
+		{
+		case MenuState::MainMenu:
+		{
+			UpdateTextAndPosition(uI.note, "Use Arrows to control, eat apples, avoid stones and borders");
+			break;
+		}
+		case MenuState::PauseMenu:
+		{
+			UpdateTextAndPosition(uI.note, "Current score: " + std::to_string(game.numEatenApples));
+			break;
+		}
+		case MenuState::GameOverMenu:
+		{
+			UpdateTextAndPosition(uI.note, "Final score: " + std::to_string(game.numEatenApples));
+			break;
+		}
+		}
+	}
+
+	void LoadNewMenu(UI& uI)
+	{
+		for (int i = 0; i < NUM_MENU_ITEMS; i++)
+		{
+			uI.menuItems[i].isActive = false;
+		}
 		switch (uI.menuState)
 		{
 		case MenuState::MainMenu:
@@ -94,6 +127,7 @@ namespace ApplesGame
 	void DrawMenu(UI& uI, sf::RenderWindow& window)
 	{
 		window.draw(uI.tint);
+		window.draw(uI.note);
 		window.draw(uI.title);
 		for (int i = 0; i < NUM_MENU_ITEMS; i++)
 		{
@@ -117,7 +151,7 @@ namespace ApplesGame
 	{
 		uI.menuState = menuState;
 		uI.menuSelectedItem = 0;
-		UpdateMenu(uI);
+		LoadNewMenu(uI);
 	}
 
 	MenuEvent GetMenuEvent(UI& uI)
