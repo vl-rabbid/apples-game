@@ -6,6 +6,7 @@ namespace ApplesGame
 {
 	struct Apple
 	{
+		bool isEaten;
 		Position2D position;
 		sf::Sprite sprite;
 	};
@@ -15,4 +16,8 @@ namespace ApplesGame
 	void InitApple(Apple& apple, const Game& game);
 
 	void DrawApple(Apple& apple, sf::RenderWindow& window);
+
+	bool IsAppleEaten(Apple& apple);
+
+	void EatApple(Apple& apple);
 }

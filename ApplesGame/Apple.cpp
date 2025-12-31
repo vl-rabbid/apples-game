@@ -8,6 +8,7 @@ namespace ApplesGame
 	{
 		// Init apple vars
 		apple.position = GetRandomPositionInScreen(SCREEN_WIDTH, SCREEN_HEIGHT);
+		apple.isEaten = false;
 
 		// Init apple sprite
 		apple.sprite.setTexture(game.appleTexture);
@@ -17,7 +18,20 @@ namespace ApplesGame
 
 	void DrawApple(Apple& apple, sf::RenderWindow& window)
 	{
-		apple.sprite.setPosition(apple.position.x, apple.position.y);
-		window.draw(apple.sprite);
+		if (!apple.isEaten)
+		{
+			apple.sprite.setPosition(apple.position.x, apple.position.y);
+			window.draw(apple.sprite);
+		}
+	}
+
+	bool IsAppleEaten(Apple& apple)
+	{
+		return apple.isEaten;
+	}
+
+	void EatApple(Apple& apple)
+	{
+		apple.isEaten = true;
 	}
 }

@@ -9,6 +9,12 @@ namespace sf
 
 namespace ApplesGame
 {
+	enum class AdjustmentType
+	{
+		Increment = 0,
+		Decrement
+	};
+
 	struct Vector2D
 	{
 		float x = 0.f;

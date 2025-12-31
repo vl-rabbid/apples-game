@@ -105,10 +105,35 @@ namespace ApplesGame
 			break;
 		}
 		}
+
+		// Loop by x
+		if (player.position.x > SCREEN_WIDTH)
+		{
+			player.position.x -= SCREEN_WIDTH;
+		}
+		else if (player.position.x < 0)
+		{
+			player.position.x += SCREEN_WIDTH;
+		}
+		// Loop by y
+		if (player.position.y > SCREEN_HEIGHT)
+		{
+			player.position.y -= SCREEN_HEIGHT;
+		}
+		else if (player.position.y < 0)
+		{
+			player.position.y += SCREEN_HEIGHT;
+		}
 	}
+
 	bool HasPlayerCollidedWithScreenBorder(Player& player)
 	{
 		return ((player.position.x + PLAYER_SIZE / 2.f) > SCREEN_WIDTH) || ((player.position.x - PLAYER_SIZE / 2.f) < 0.f) ||
 			((player.position.y + PLAYER_SIZE / 2.f) > SCREEN_HEIGHT) || ((player.position.y - PLAYER_SIZE / 2.f) < 0.f);
+	}
+
+	bool HasPlayerCollidedWithApple(Player& player, Apple& apple)
+	{
+		return IsCirclesCollide(player.position, PLAYER_SIZE / 2.0, apple.position, APPLE_SIZE / 2.0);
 	}
 }

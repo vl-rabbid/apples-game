@@ -22,6 +22,7 @@ namespace ApplesGame
 	};
 
 	struct Game;
+	struct Apple;
 
 	void InitPlayer(Player& player, const Game& game);
 
@@ -34,4 +35,6 @@ namespace ApplesGame
 	void UpdatePlayerPosition(Player& player, const float deltaTime);
 
 	bool HasPlayerCollidedWithScreenBorder(Player& player);
+
+	bool HasPlayerCollidedWithApple(Player& player, Apple& apple);
 }

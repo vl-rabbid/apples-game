@@ -4,18 +4,24 @@
 
 namespace ApplesGame
 {
-	enum class MenuEvent
+	enum class MenuItemType
 	{
-		Nothing = 0,
-		StartGame,
+		StartGame = 0,
 		ContinueGame,
 		ExitGame,
-		BackMainMenu
+		GameMode,
+		BackMainMenu,
+		RandomizeGameMode,
+		InfiniteApples,
+		AcceleratePlayer,
+		CollideWithBorders,
+		NumberOfApples
 	};
 
 	enum class MenuState
 	{
 		MainMenu = 0,
+		GameModeMenu,
 		PauseMenu,
 		GameOverMenu
 	};
@@ -23,9 +29,11 @@ namespace ApplesGame
 	struct MenuItem
 	{
 		sf::Text text;
-		MenuEvent event{};
+		MenuItemType itemType{};
 		bool isActive;
 	};
 
-	void SetMenuItem(MenuItem& menuItem, std::string textTitle,const MenuEvent& menuEvent);
+	void SetMenuItem(MenuItem& menuItem, std::string textTitle,const MenuItemType& menuItemType);
+
+	void UpdateItemString(MenuItem& menuItem, std::string textTitle);
 }
