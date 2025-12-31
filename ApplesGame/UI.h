@@ -37,7 +37,7 @@ namespace ApplesGame
 
 	void SetMenuState(UI& uI, const MenuState& menuState);
 
-	MenuEvent GetMenuEvent(UI& uI);
+	MenuItemType GetMenuItemType(UI& uI);
 
 	void MoveMenuUp(UI& uI);
 

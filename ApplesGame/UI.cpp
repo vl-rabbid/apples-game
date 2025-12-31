@@ -15,7 +15,7 @@ namespace ApplesGame
 		uI.title.setCharacterSize(90);
 		uI.title.setFillColor(sf::Color::Yellow);
 		SetTextRelativeOrigin(uI.title, 0.5f, 0.5f);
-		SetTextScreenRelativePosition(uI.title, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.2f);
+		SetTextScreenRelativePosition(uI.title, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.15f);
 
 		// Init Note
 		uI.note.setString("note");
@@ -23,17 +23,17 @@ namespace ApplesGame
 		uI.note.setCharacterSize(25);
 		uI.note.setFillColor(sf::Color::Yellow);
 		SetTextRelativeOrigin(uI.note, 0.5f, 0.5f);
-		SetTextScreenRelativePosition(uI.note, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.35f);
+		SetTextScreenRelativePosition(uI.note, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.3f);
 
 		// Init Menu Items
 		for (int i = 0; i < NUM_MENU_ITEMS; i++)
 		{
 			uI.menuItems[i].text.setString("item " + std::to_string(i));
 			uI.menuItems[i].text.setFont(game.font);
-			uI.menuItems[i].text.setCharacterSize(40);
+			uI.menuItems[i].text.setCharacterSize(35);
 			uI.menuItems[i].text.setFillColor(sf::Color::Yellow);
 			SetTextRelativeOrigin(uI.menuItems[i].text, 0.5f, 0.5f);
-			SetTextScreenRelativePosition(uI.menuItems[i].text, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.5f);
+			SetTextScreenRelativePosition(uI.menuItems[i].text, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.4f);
 			ShiftTextPozition(uI.menuItems[i].text, 0.f, 50.f * i);
 		}
 
@@ -76,6 +76,16 @@ namespace ApplesGame
 			UpdateTextAndPosition(uI.note, "Use Arrows to control, eat apples, avoid stones and borders");
 			break;
 		}
+		case MenuState::GameModeMenu:
+		{
+			UpdateTextAndPosition(uI.note, "Try different combinations!");
+
+			UpdateItemString(uI.menuItems[1], ("< Infinite Apples : " + std::to_string(IsInfiniteApples(game.gameMode)) + " >"));
+			UpdateItemString(uI.menuItems[2], ("< Accelerate Player : " + std::to_string(IsAcceleratePlayer(game.gameMode)) + " >"));
+			UpdateItemString(uI.menuItems[3], ("< Collide with Borders : " + std::to_string(IsCollideWithBorders(game.gameMode)) + " >"));
+			UpdateItemString(uI.menuItems[4], ("< Number of Apples : " + std::to_string(GetNumberOfApples(game.gameMode)) + " >"));
+			break;
+		}
 		case MenuState::PauseMenu:
 		{
 			UpdateTextAndPosition(uI.note, "Current score: " + std::to_string(game.numEatenApples));
@@ -100,25 +110,37 @@ namespace ApplesGame
 		case MenuState::MainMenu:
 		{
 			UpdateTextAndPosition(uI.title, "Apples Game!");
-			SetMenuItem(uI.menuItems[0], "Start game", MenuEvent::StartGame);
-			SetMenuItem(uI.menuItems[1], "Exit game", MenuEvent::ExitGame);
+			SetMenuItem(uI.menuItems[0], "Start game", MenuItemType::StartGame);
+			SetMenuItem(uI.menuItems[1], "Game mode", MenuItemType::GameMode);
+			SetMenuItem(uI.menuItems[2], "Exit game", MenuItemType::ExitGame);
+			break;
+		}
+		case MenuState::GameModeMenu:
+		{
+			UpdateTextAndPosition(uI.title, "Game mode");;
+			SetMenuItem(uI.menuItems[0], "Randomize", MenuItemType::RandomizeGameMode);
+			SetMenuItem(uI.menuItems[1], "Infinite Apples", MenuItemType::InfiniteApples);
+			SetMenuItem(uI.menuItems[2], "Accelerate Player", MenuItemType::AcceleratePlayer);
+			SetMenuItem(uI.menuItems[3], "Collide with Borders", MenuItemType::CollideWithBorders);
+			SetMenuItem(uI.menuItems[4], "Number of Apples", MenuItemType::NumberOfApples);
+			SetMenuItem(uI.menuItems[5], "Back", MenuItemType::BackMainMenu);
 			break;
 		}
 		case MenuState::PauseMenu:
 		{
 			UpdateTextAndPosition(uI.title, "Pause");
-			SetMenuItem(uI.menuItems[0], "Continue game", MenuEvent::ContinueGame);
-			SetMenuItem(uI.menuItems[1], "Restart game", MenuEvent::StartGame);
-			SetMenuItem(uI.menuItems[2], "Back to main menu", MenuEvent::BackMainMenu);
-			SetMenuItem(uI.menuItems[3], "Exit game", MenuEvent::ExitGame);
+			SetMenuItem(uI.menuItems[0], "Continue game", MenuItemType::ContinueGame);
+			SetMenuItem(uI.menuItems[1], "Restart game", MenuItemType::StartGame);
+			SetMenuItem(uI.menuItems[2], "Back to main menu", MenuItemType::BackMainMenu);
+			SetMenuItem(uI.menuItems[3], "Exit game", MenuItemType::ExitGame);
 			break;
 		}
 		case MenuState::GameOverMenu:
 		{
 			UpdateTextAndPosition(uI.title, "GAME OVER");
-			SetMenuItem(uI.menuItems[0], "Restart game", MenuEvent::StartGame);
-			SetMenuItem(uI.menuItems[1], "Back to main menu", MenuEvent::BackMainMenu);
-			SetMenuItem(uI.menuItems[2], "Exit game", MenuEvent::ExitGame);
+			SetMenuItem(uI.menuItems[0], "Restart game", MenuItemType::StartGame);
+			SetMenuItem(uI.menuItems[1], "Back to main menu", MenuItemType::BackMainMenu);
+			SetMenuItem(uI.menuItems[2], "Exit game", MenuItemType::ExitGame);
 			break;
 		}
 		}
@@ -154,10 +176,10 @@ namespace ApplesGame
 		LoadNewMenu(uI);
 	}
 
-	MenuEvent GetMenuEvent(UI& uI)
+	MenuItemType GetMenuItemType(UI& uI)
 	{
 		uI.menuSelectedItem = uI.menuSelectedItem % NUM_MENU_ITEMS;
-		return uI.menuItems[uI.menuSelectedItem].event;
+		return uI.menuItems[uI.menuSelectedItem].itemType;
 	}
 
 	void MoveMenuUp(UI& uI)

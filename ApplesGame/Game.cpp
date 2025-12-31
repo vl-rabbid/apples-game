@@ -77,6 +77,10 @@ namespace ApplesGame
 		}
 		case GameState::Pause:
 		{
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+			{
+				SetGameState(game, GameState::GameLoop);
+			}
 			HandleMenuImput(game, event);
 			break;
 		}
@@ -160,21 +164,25 @@ namespace ApplesGame
 		// Load font 
 		assert(game.font.loadFromFile(RESOURCES_PATH + "\\Fonts/Roboto-Regular.ttf"));
 
+		game.apples = nullptr;
+		InitGameMode(game.gameMode);
 		InitUI(game.uI, game);
 		game.sound.setVolume(25.f);
-
 		SetGameState(game, GameState::MainMenu);
 	}
 
-	void RestartGame(Game& game)
+	void StartGameLoop(Game& game)
 	{
 		game.numEatenApples = 0;
-
 		InitPlayer(game.player, game);
-		for (int i = 0; i < NUM_APPLES; ++i)
+
+		FreeAppleMemoryAllocation(game);
+		game.apples = new Apple[GetNumberOfApples(game.gameMode)];
+		for (Apple* ptrApple = game.apples; ptrApple < game.apples + GetNumberOfApples(game.gameMode); ++ptrApple)
 		{
-			InitApple(game.apples[i], game);
+			InitApple(*ptrApple, game);
 		}
+
 		for (int i = 0; i < NUM_STONES; ++i)
 		{
 			InitStone(game.stones[i], game);
@@ -186,22 +194,38 @@ namespace ApplesGame
 		UpdatePlayerPosition(game.player, deltaTime);
 
 		// Check eaten apples 
-		for (int i = 0; i < NUM_APPLES; ++i)
+		for (Apple* ptrApple = game.apples; ptrApple < game.apples + GetNumberOfApples(game.gameMode); ++ptrApple)
 		{
-			if (IsCirclesCollide(game.player.position, PLAYER_SIZE / 2.0, game.apples[i].position, APPLE_SIZE / 2.0))
+			if (HasPlayerCollidedWithApple(game.player, *ptrApple))
 			{
-				PlaySound(game, game.appleEatSound);
-				InitApple(game.apples[i], game);
+				if (!IsAppleEaten(*ptrApple))
+				{
+					PlaySound(game, game.appleEatSound);
+					game.numEatenApples++;
 
-				game.numEatenApples++;
-				game.player.speed += ACCELERATION;
+					if (IsAcceleratePlayer(game.gameMode))
+					{
+						game.player.speed += ACCELERATION;
+					}
+					if (IsInfiniteApples(game.gameMode))
+					{
+						InitApple(*ptrApple, game);
+					}
+					else
+					{
+						EatApple(*ptrApple);
+					}
+				}
 			}
 		}
 
 		// Check border collision
 		if (HasPlayerCollidedWithScreenBorder(game.player))
 		{
-			SetGameState(game, GameState::GameOver);
+			if (IsCollideWithBorders(game.gameMode))
+			{
+				SetGameState(game, GameState::GameOver);
+			}
 		}
 
 		// Check stone collision
@@ -220,17 +244,16 @@ namespace ApplesGame
 		{
 			DrawStone(game.stones[i], window);
 		}
-		for (int i = 0; i < NUM_APPLES; ++i)
+		for (Apple* ptrApple = game.apples; ptrApple < game.apples + GetNumberOfApples(game.gameMode); ++ptrApple)
 		{
-			DrawApple(game.apples[i], window);
+			DrawApple(*ptrApple, window);
 		}
 		DrawPlayer(game.player, window);
 	}
 
 	void HandleMenuImput(Game& game, const sf::Event& event)
 	{
-		MenuEvent menuEvent = MenuEvent::Nothing;
-
+		MenuItemType menuItemType;
 		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up)
 		{
 			MoveMenuUp(game.uI);
@@ -241,50 +264,102 @@ namespace ApplesGame
 		}
 		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)
 		{
-			menuEvent = GetMenuEvent(game.uI);
+			menuItemType = GetMenuItemType(game.uI);
+			SelectMenuItem(game, menuItemType);
 		}
 		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
 		{
-			menuEvent = GetMenuEvent(game.uI);
+			menuItemType = GetMenuItemType(game.uI);
+			SelectMenuItem(game, menuItemType);
 		}
-
-		HandleMenuEvent(game, menuEvent);
+		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
+		{
+			menuItemType = GetMenuItemType(game.uI);
+			AdjustMenuItem(game, menuItemType, AdjustmentType::Decrement);
+		}
+		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
+		{
+			menuItemType = GetMenuItemType(game.uI);
+			AdjustMenuItem(game, menuItemType, AdjustmentType::Increment);
+		}
 	}
 
-	void HandleMenuEvent(Game& game, const MenuEvent& menuEvent)
+	void SelectMenuItem(Game& game, const MenuItemType& menuItemType)
 	{
-		switch (menuEvent)
+		switch (menuItemType)
 		{
-		case MenuEvent::Nothing:
-		{
-			break;
-		}
-		case MenuEvent::StartGame:
+		case MenuItemType::StartGame:
 		{
 			SetGameState(game, GameState::GameLoop);
-			RestartGame(game);
+			StartGameLoop(game);
 			break;
 		}
-		case MenuEvent::ContinueGame:
+		case MenuItemType::ContinueGame:
 		{
 			SetGameState(game, GameState::GameLoop);
 			break;
 		}
-		case MenuEvent::ExitGame:
+		case MenuItemType::ExitGame:
 		{
 			SetGameState(game, GameState::ExitGame);
 			break;
 		}
-		case MenuEvent::BackMainMenu:
+		case MenuItemType::GameMode:
+		{
+			SetMenuState(game.uI, MenuState::GameModeMenu);
+			break;
+		}
+		case MenuItemType::BackMainMenu:
 		{
 			SetGameState(game, GameState::MainMenu);
 			break;
 		}
+		case MenuItemType::RandomizeGameMode:
+		{
+			RandomizeGameMode(game.gameMode);
+			break;
+		}
+		}
+	}
+
+	void AdjustMenuItem(Game& game, const MenuItemType& menuItemType, const AdjustmentType& adjustmentType)
+	{
+		switch (menuItemType)
+		{
+		case MenuItemType::InfiniteApples:
+		{
+			SwitchInfiniteApples(game.gameMode);
+			break;
+		}
+		case MenuItemType::AcceleratePlayer:
+		{
+			SwitchAcceleratePlayer(game.gameMode);
+			break;
+		}
+		case MenuItemType::CollideWithBorders:
+		{
+			SwitchCollideWithBorders(game.gameMode);
+			break;
+		}
+		case MenuItemType::NumberOfApples:
+		{
+			AdjustNumberOfApples(game.gameMode, adjustmentType);
+			break;
+		}
+		}
+	}
+
+	void FreeAppleMemoryAllocation(Game& game)
+	{
+		if (game.apples != nullptr) {
+			delete[] game.apples;
+			game.apples = nullptr;
 		}
 	}
 
 	void DeinitializeGame(Game& game, sf::RenderWindow& window)
 	{
+		FreeAppleMemoryAllocation(game);
 		window.close();
 	}
 }

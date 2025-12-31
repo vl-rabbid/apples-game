@@ -4,6 +4,8 @@
 #include "Stone.h"
 #include "Constants.h"
 #include "UI.h"
+#include "Math.h"
+#include "GameMode.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
@@ -21,7 +23,8 @@ namespace ApplesGame
 	struct Game
 	{
 		// Global game data
-		GameState gameState = GameState::MainMenu;
+		GameState gameState{};
+		GameMode gameMode{};
 		int numEatenApples = 0;
 
 		//Resources
@@ -32,7 +35,7 @@ namespace ApplesGame
 		sf::SoundBuffer deathSound;
 
 		Player player;
-		Apple apples[NUM_APPLES];
+		Apple* apples;
 		Stone stones[NUM_STONES];
 		UI uI;
 		sf::Sound sound;
@@ -53,7 +56,7 @@ namespace ApplesGame
 
 	void InitGame(Game& game);
 
-	void RestartGame(Game& game);
+	void StartGameLoop(Game& game);
 
 	void UpdateGameLoop(Game& game, const float deltaTime);
 
@@ -61,7 +64,11 @@ namespace ApplesGame
 
 	void HandleMenuImput(Game& game, const sf::Event& event);
 
-	void HandleMenuEvent(Game& game, const MenuEvent& menuEvent);
+	void SelectMenuItem(Game& game, const MenuItemType& menuItemType);
+
+	void AdjustMenuItem(Game& game, const MenuItemType& menuItemType, const AdjustmentType& adjustmentType);
+
+	void FreeAppleMemoryAllocation(Game& game);
 
 	void DeinitializeGame(Game& game, sf::RenderWindow& window);
 }
