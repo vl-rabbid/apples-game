@@ -23,6 +23,7 @@ namespace ApplesGame
 
 	struct Game;
 	struct Apple;
+	struct Stone;
 
 	void InitPlayer(Player& player, const Game& game);
 
@@ -37,4 +38,6 @@ namespace ApplesGame
 	bool HasPlayerCollidedWithScreenBorder(Player& player);
 
 	bool HasPlayerCollidedWithApple(Player& player, Apple& apple);
+
+	bool HasPlayerCollidedWithStone(Player& player, Stone& stone);
 }

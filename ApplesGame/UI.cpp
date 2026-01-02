@@ -12,7 +12,7 @@ namespace ApplesGame
 		uI.title.setString("title");
 		uI.title.setFont(game.font);
 		uI.title.setStyle(sf::Text::Bold);
-		uI.title.setCharacterSize(90);
+		uI.title.setCharacterSize(100);
 		uI.title.setFillColor(sf::Color::Yellow);
 		SetTextRelativeOrigin(uI.title, 0.5f, 0.5f);
 		SetTextScreenRelativePosition(uI.title, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.15f);
@@ -34,7 +34,7 @@ namespace ApplesGame
 			uI.menuItems[i].text.setFillColor(sf::Color::Yellow);
 			SetTextRelativeOrigin(uI.menuItems[i].text, 0.5f, 0.5f);
 			SetTextScreenRelativePosition(uI.menuItems[i].text, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.4f);
-			ShiftTextPozition(uI.menuItems[i].text, 0.f, 50.f * i);
+			ShiftTextPozition(uI.menuItems[i].text, 0.f, 45.f * i);
 		}
 
 		// Init Score
@@ -84,6 +84,7 @@ namespace ApplesGame
 			UpdateItemString(uI.menuItems[2], ("< Accelerate Player : " + std::to_string(IsAcceleratePlayer(game.gameMode)) + " >"));
 			UpdateItemString(uI.menuItems[3], ("< Collide with Borders : " + std::to_string(IsCollideWithBorders(game.gameMode)) + " >"));
 			UpdateItemString(uI.menuItems[4], ("< Number of Apples : " + std::to_string(GetNumberOfApples(game.gameMode)) + " >"));
+			UpdateItemString(uI.menuItems[5], ("< Number of Stones : " + std::to_string(GetNumberOfStones(game.gameMode)) + " >"));
 			break;
 		}
 		case MenuState::PauseMenu:
@@ -123,7 +124,8 @@ namespace ApplesGame
 			SetMenuItem(uI.menuItems[2], "Accelerate Player", MenuItemType::AcceleratePlayer);
 			SetMenuItem(uI.menuItems[3], "Collide with Borders", MenuItemType::CollideWithBorders);
 			SetMenuItem(uI.menuItems[4], "Number of Apples", MenuItemType::NumberOfApples);
-			SetMenuItem(uI.menuItems[5], "Back", MenuItemType::BackMainMenu);
+			SetMenuItem(uI.menuItems[5], "Number of Stones", MenuItemType::NumberOfStones);
+			SetMenuItem(uI.menuItems[6], "Back", MenuItemType::BackMainMenu);
 			break;
 		}
 		case MenuState::PauseMenu:

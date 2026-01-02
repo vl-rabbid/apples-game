@@ -9,6 +9,7 @@ namespace ApplesGame
 		bool acceleratePlayer;
 		bool collideWithBorders;
 		int numberOfApples;
+		int numberOfStones;
 	};
 
 	void RandomizeGameMode(GameMode& gameMode);
@@ -23,6 +24,8 @@ namespace ApplesGame
 
 	int GetNumberOfApples(const GameMode& gameMode);
 
+	int GetNumberOfStones(const GameMode& gameMode);
+
 	void SwitchInfiniteApples(GameMode& gameMode);
 
 	void SwitchAcceleratePlayer(GameMode& gameMode);
@@ -30,4 +33,6 @@ namespace ApplesGame
 	void SwitchCollideWithBorders(GameMode& gameMode);
 
 	void AdjustNumberOfApples(GameMode& gameMode, const AdjustmentType& adjustmentType);
+
+	void AdjustNumberOfStones(GameMode& gameMode, const AdjustmentType& adjustmentType);
 }

@@ -8,7 +8,8 @@ namespace ApplesGame
 		gameMode.infiniteApples = rand() % 2;
 		gameMode.acceleratePlayer = rand() % 2;
 		gameMode.collideWithBorders = rand() % 2;
-		gameMode.numberOfApples = rand() % (MAX_NUM_APPLES + 1);
+		gameMode.numberOfApples = rand() % (MAX_NUM_APPLES);
+		gameMode.numberOfStones = rand() % (MAX_NUM_STONES);
 	}
 
 	void InitGameMode(GameMode& gameMode)
@@ -17,6 +18,7 @@ namespace ApplesGame
 		gameMode.acceleratePlayer = true;
 		gameMode.collideWithBorders = true;
 		gameMode.numberOfApples = 32;
+		gameMode.numberOfStones = 16;
 	}
 
 	bool IsInfiniteApples(const GameMode& gameMode)
@@ -37,6 +39,11 @@ namespace ApplesGame
 	int GetNumberOfApples(const GameMode& gameMode)
 	{
 		return gameMode.numberOfApples;
+	}
+
+	int GetNumberOfStones(const GameMode& gameMode)
+	{
+		return gameMode.numberOfStones;
 	}
 
 	void SwitchInfiniteApples(GameMode& gameMode)
@@ -66,11 +73,30 @@ namespace ApplesGame
 		case AdjustmentType::Decrement:
 		{
 			gameMode.numberOfApples--;
-			gameMode.numberOfApples += MAX_NUM_APPLES + 1;
+			gameMode.numberOfApples += MAX_NUM_APPLES;
 			break;
 		}
 		}
-		gameMode.numberOfApples %= MAX_NUM_APPLES + 1;
+		gameMode.numberOfApples %= MAX_NUM_APPLES;
+	}
+
+	void AdjustNumberOfStones(GameMode& gameMode, const AdjustmentType& adjustmentType)
+	{
+		switch (adjustmentType)
+		{
+		case AdjustmentType::Increment:
+		{
+			gameMode.numberOfStones++;
+			break;
+		}
+		case AdjustmentType::Decrement:
+		{
+			gameMode.numberOfStones--;
+			gameMode.numberOfStones += MAX_NUM_STONES;
+			break;
+		}
+		}
+		gameMode.numberOfStones %= MAX_NUM_STONES;
 	}
 }
 

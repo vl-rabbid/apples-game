@@ -15,7 +15,8 @@ namespace ApplesGame
 		InfiniteApples,
 		AcceleratePlayer,
 		CollideWithBorders,
-		NumberOfApples
+		NumberOfApples,
+		NumberOfStones
 	};
 
 	enum class MenuState
