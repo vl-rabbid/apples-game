@@ -52,7 +52,7 @@ namespace ApplesGame
 
 	void UpdateHUD(UI& uI, const Game& game)
 	{
-		UpdateTextAndPosition(uI.score, "Apples Eaten: " + std::to_string(game.numEatenApples));
+		UpdateTextAndPosition(uI.score, "Score: " + std::to_string(game.score));
 	}
 
 	void DrawHUD(UI& uI, sf::RenderWindow& window)
@@ -89,12 +89,12 @@ namespace ApplesGame
 		}
 		case MenuState::PauseMenu:
 		{
-			UpdateTextAndPosition(uI.note, "Current score: " + std::to_string(game.numEatenApples));
+			UpdateTextAndPosition(uI.note, "Current score: " + std::to_string(game.score));
 			break;
 		}
 		case MenuState::GameOverMenu:
 		{
-			UpdateTextAndPosition(uI.note, "Final score: " + std::to_string(game.numEatenApples));
+			UpdateTextAndPosition(uI.note, "Final score: " + std::to_string(game.score));
 			break;
 		}
 		}

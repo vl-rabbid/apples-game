@@ -174,7 +174,7 @@ namespace ApplesGame
 
 	void StartGameLoop(Game& game)
 	{
-		game.numEatenApples = 0;
+		game.score = 0;
 		InitPlayer(game.player, game);
 
 		FreeAppleMemoryAllocation(game);
@@ -204,9 +204,17 @@ namespace ApplesGame
 				if (!IsAppleEaten(*ptrApple))
 				{
 					PlaySound(game, game.appleEatSound);
-					game.numEatenApples++;
+					
+					if (IsAppleSpecial(*ptrApple))
+					{
+						game.score += POINTS_FOR_APPLE * 2;
+					}
+					else
+					{
+						game.score += POINTS_FOR_APPLE;
+					}
 
-					if (IsAcceleratePlayer(game.gameMode))
+					if (IsAcceleratePlayer(game.gameMode) && !(IsAppleSpecial(*ptrApple)))
 					{
 						game.player.speed += ACCELERATION;
 					}

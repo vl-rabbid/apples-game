@@ -12,8 +12,17 @@ namespace ApplesGame
 
 		// Init apple sprite
 		apple.sprite.setTexture(game.appleTexture);
+		apple.sprite.setColor(sf::Color::White);
 		SetSpriteSize(apple.sprite, APPLE_SIZE, APPLE_SIZE);
 		SetSpriteRelativeOrigin(apple.sprite, 0.5f, 0.5f);
+
+		// Special apple
+		if (rollChance(SPECIAL_APPLE_CHANCE))
+		{
+			apple.isSpecial = true;
+			apple.sprite.setColor(sf::Color::Green);
+		}
+		
 	}
 
 	void DrawApple(Apple& apple, sf::RenderWindow& window)
@@ -33,5 +42,10 @@ namespace ApplesGame
 	void EatApple(Apple& apple)
 	{
 		apple.isEaten = true;
+	}
+
+	bool IsAppleSpecial(Apple& apple)
+	{
+		return apple.isSpecial;
 	}
 }

@@ -13,7 +13,7 @@ namespace ApplesGame
 		// Menus
 		sf::Text title;
 		sf::Text note;
-		int menuSelectedItem;
+		int menuSelectedItem = 0;
 		MenuState menuState{};
 		MenuItem menuItems[NUM_MENU_ITEMS];
 		sf::RectangleShape tint;

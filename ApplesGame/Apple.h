@@ -6,7 +6,8 @@ namespace ApplesGame
 {
 	struct Apple
 	{
-		bool isEaten;
+		bool isEaten = false;
+		bool isSpecial = false;
 		Position2D position;
 		sf::Sprite sprite;
 	};
@@ -20,4 +21,6 @@ namespace ApplesGame
 	bool IsAppleEaten(Apple& apple);
 
 	void EatApple(Apple& apple);
+
+	bool IsAppleSpecial(Apple& apple);
 }
