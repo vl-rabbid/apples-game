@@ -8,6 +8,7 @@ namespace ApplesGame
 		bool infiniteApples;
 		bool acceleratePlayer;
 		bool collideWithBorders;
+		bool spawnSpecialApples;
 		int numberOfApples;
 		int numberOfStones;
 	};
@@ -22,6 +23,8 @@ namespace ApplesGame
 
 	bool IsCollideWithBorders(const GameMode& gameMode);
 
+	bool IsSpawnSpecialApples(const GameMode& gameMode);
+
 	int GetNumberOfApples(const GameMode& gameMode);
 
 	int GetNumberOfStones(const GameMode& gameMode);
@@ -31,6 +34,8 @@ namespace ApplesGame
 	void SwitchAcceleratePlayer(GameMode& gameMode);
 
 	void SwitchCollideWithBorders(GameMode& gameMode);
+
+	void SwitchSpawnSpecialApples(GameMode& gameMode);
 
 	void AdjustNumberOfApples(GameMode& gameMode, const AdjustmentType& adjustmentType);
 

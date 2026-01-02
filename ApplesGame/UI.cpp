@@ -30,11 +30,11 @@ namespace ApplesGame
 		{
 			uI.menuItems[i].text.setString("item " + std::to_string(i));
 			uI.menuItems[i].text.setFont(game.font);
-			uI.menuItems[i].text.setCharacterSize(35);
+			uI.menuItems[i].text.setCharacterSize(32);
 			uI.menuItems[i].text.setFillColor(sf::Color::Yellow);
 			SetTextRelativeOrigin(uI.menuItems[i].text, 0.5f, 0.5f);
 			SetTextScreenRelativePosition(uI.menuItems[i].text, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.4f);
-			ShiftTextPozition(uI.menuItems[i].text, 0.f, 45.f * i);
+			ShiftTextPozition(uI.menuItems[i].text, 0.f, 42.f * i);
 		}
 
 		// Init Score
@@ -83,8 +83,9 @@ namespace ApplesGame
 			UpdateItemString(uI.menuItems[1], ("< Infinite Apples : " + std::to_string(IsInfiniteApples(game.gameMode)) + " >"));
 			UpdateItemString(uI.menuItems[2], ("< Accelerate Player : " + std::to_string(IsAcceleratePlayer(game.gameMode)) + " >"));
 			UpdateItemString(uI.menuItems[3], ("< Collide with Borders : " + std::to_string(IsCollideWithBorders(game.gameMode)) + " >"));
-			UpdateItemString(uI.menuItems[4], ("< Number of Apples : " + std::to_string(GetNumberOfApples(game.gameMode)) + " >"));
-			UpdateItemString(uI.menuItems[5], ("< Number of Stones : " + std::to_string(GetNumberOfStones(game.gameMode)) + " >"));
+			UpdateItemString(uI.menuItems[4], ("< Spawn special Apples : " + std::to_string(IsSpawnSpecialApples(game.gameMode)) + " >"));
+			UpdateItemString(uI.menuItems[5], ("< Number of Apples : " + std::to_string(GetNumberOfApples(game.gameMode)) + " >"));
+			UpdateItemString(uI.menuItems[6], ("< Number of Stones : " + std::to_string(GetNumberOfStones(game.gameMode)) + " >"));
 			break;
 		}
 		case MenuState::PauseMenu:
@@ -123,9 +124,10 @@ namespace ApplesGame
 			SetMenuItem(uI.menuItems[1], "Infinite Apples", MenuItemType::InfiniteApples);
 			SetMenuItem(uI.menuItems[2], "Accelerate Player", MenuItemType::AcceleratePlayer);
 			SetMenuItem(uI.menuItems[3], "Collide with Borders", MenuItemType::CollideWithBorders);
-			SetMenuItem(uI.menuItems[4], "Number of Apples", MenuItemType::NumberOfApples);
-			SetMenuItem(uI.menuItems[5], "Number of Stones", MenuItemType::NumberOfStones);
-			SetMenuItem(uI.menuItems[6], "Back", MenuItemType::BackMainMenu);
+			SetMenuItem(uI.menuItems[4], "Spawn special Apples", MenuItemType::SpawnSpecialApples);
+			SetMenuItem(uI.menuItems[5], "Number of Apples", MenuItemType::NumberOfApples);
+			SetMenuItem(uI.menuItems[6], "Number of Stones", MenuItemType::NumberOfStones);
+			SetMenuItem(uI.menuItems[7], "Back", MenuItemType::BackMainMenu);
 			break;
 		}
 		case MenuState::PauseMenu:

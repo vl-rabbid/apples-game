@@ -8,6 +8,7 @@ namespace ApplesGame
 		gameMode.infiniteApples = rand() % 2;
 		gameMode.acceleratePlayer = rand() % 2;
 		gameMode.collideWithBorders = rand() % 2;
+		gameMode.spawnSpecialApples = rand() % 2;
 		gameMode.numberOfApples = rand() % (MAX_NUM_APPLES);
 		gameMode.numberOfStones = rand() % (MAX_NUM_STONES);
 	}
@@ -17,6 +18,7 @@ namespace ApplesGame
 		gameMode.infiniteApples = true;
 		gameMode.acceleratePlayer = true;
 		gameMode.collideWithBorders = true;
+		gameMode.spawnSpecialApples = true;
 		gameMode.numberOfApples = 32;
 		gameMode.numberOfStones = 16;
 	}
@@ -34,6 +36,11 @@ namespace ApplesGame
 	bool IsCollideWithBorders(const GameMode& gameMode)
 	{
 		return gameMode.collideWithBorders;
+	}
+
+	bool IsSpawnSpecialApples(const GameMode& gameMode)
+	{
+		return gameMode.spawnSpecialApples;
 	}
 
 	int GetNumberOfApples(const GameMode& gameMode)
@@ -59,6 +66,11 @@ namespace ApplesGame
 	void SwitchCollideWithBorders(GameMode& gameMode)
 	{
 		gameMode.collideWithBorders = !gameMode.collideWithBorders;
+	}
+
+	void SwitchSpawnSpecialApples(GameMode& gameMode)
+	{
+		gameMode.spawnSpecialApples = !gameMode.spawnSpecialApples;
 	}
 
 	void AdjustNumberOfApples(GameMode& gameMode, const AdjustmentType& adjustmentType)

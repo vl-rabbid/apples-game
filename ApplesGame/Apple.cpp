@@ -17,12 +17,14 @@ namespace ApplesGame
 		SetSpriteRelativeOrigin(apple.sprite, 0.5f, 0.5f);
 
 		// Special apple
-		if (rollChance(SPECIAL_APPLE_CHANCE))
+		if (IsSpawnSpecialApples(game.gameMode))
 		{
-			apple.isSpecial = true;
-			apple.sprite.setColor(sf::Color::Green);
+			if (rollChance(SPECIAL_APPLE_CHANCE))
+			{
+				apple.isSpecial = true;
+				apple.sprite.setColor(sf::Color::Green);
+			}
 		}
-		
 	}
 
 	void DrawApple(Apple& apple, sf::RenderWindow& window)
