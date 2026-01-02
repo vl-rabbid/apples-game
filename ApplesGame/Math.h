@@ -42,4 +42,6 @@ namespace ApplesGame
 	Vector2D GetTextScreenRelativePosition(sf::Text& text, float screenWidth, float screenHeight);
 
 	void ShiftTextPozition(sf::Text& text, float shiftX, float shiftY);
+
+	bool rollChance(float percent);
 }

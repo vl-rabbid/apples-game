@@ -25,7 +25,7 @@ namespace ApplesGame
 		// Global game data
 		GameState gameState{};
 		GameMode gameMode{};
-		int numEatenApples = 0;
+		int score = 0;
 
 		//Resources
 		sf::Texture playerTexture;
@@ -35,8 +35,8 @@ namespace ApplesGame
 		sf::SoundBuffer deathSound;
 
 		Player player;
-		Apple* apples;
-		Stone* stones;
+		Apple* apples = nullptr;
+		Stone* stones = nullptr;
 		UI uI;
 		sf::Sound sound;
 		sf::Font font;

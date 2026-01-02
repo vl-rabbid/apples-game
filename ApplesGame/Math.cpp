@@ -80,4 +80,9 @@ namespace ApplesGame
 		position.y += shiftY;
 		text.setPosition(position);
 	}
+
+	bool rollChance(float percent)
+	{
+		return (rand() / (float)RAND_MAX) < (percent / 100.f);
+	}
 }
