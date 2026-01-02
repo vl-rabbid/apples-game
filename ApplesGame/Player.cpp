@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "Math.h"
 #include "Apple.h"
+#include "Stone.h"
 
 namespace ApplesGame
 {
@@ -135,5 +136,10 @@ namespace ApplesGame
 	bool HasPlayerCollidedWithApple(Player& player, Apple& apple)
 	{
 		return IsCirclesCollide(player.position, PLAYER_SIZE / 2.0, apple.position, APPLE_SIZE / 2.0);
+	}
+
+	bool HasPlayerCollidedWithStone(Player& player, Stone& stone)
+	{
+		return IsRectanglesCollide(player.position, { PLAYER_SIZE, PLAYER_SIZE }, stone.position, { STONE_SIZE, STONE_SIZE });
 	}
 }

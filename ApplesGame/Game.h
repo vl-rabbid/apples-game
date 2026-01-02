@@ -36,7 +36,7 @@ namespace ApplesGame
 
 		Player player;
 		Apple* apples;
-		Stone stones[NUM_STONES];
+		Stone* stones;
 		UI uI;
 		sf::Sound sound;
 		sf::Font font;
@@ -69,6 +69,8 @@ namespace ApplesGame
 	void AdjustMenuItem(Game& game, const MenuItemType& menuItemType, const AdjustmentType& adjustmentType);
 
 	void FreeAppleMemoryAllocation(Game& game);
+
+	void FreeStoneMemoryAllocation(Game& game);
 
 	void DeinitializeGame(Game& game, sf::RenderWindow& window);
 }

@@ -165,6 +165,7 @@ namespace ApplesGame
 		assert(game.font.loadFromFile(RESOURCES_PATH + "\\Fonts/Roboto-Regular.ttf"));
 
 		game.apples = nullptr;
+		game.stones = nullptr;
 		InitGameMode(game.gameMode);
 		InitUI(game.uI, game);
 		game.sound.setVolume(25.f);
@@ -183,9 +184,11 @@ namespace ApplesGame
 			InitApple(*ptrApple, game);
 		}
 
-		for (int i = 0; i < NUM_STONES; ++i)
+		FreeStoneMemoryAllocation(game);
+		game.stones = new Stone[GetNumberOfStones(game.gameMode)];
+		for (Stone* ptrStone = game.stones; ptrStone < game.stones + GetNumberOfStones(game.gameMode); ++ptrStone)
 		{
-			InitStone(game.stones[i], game);
+			InitStone(*ptrStone, game);
 		}
 	}
 
@@ -229,9 +232,9 @@ namespace ApplesGame
 		}
 
 		// Check stone collision
-		for (int i = 0; i < NUM_STONES; ++i)
+		for (Stone* ptrStone = game.stones; ptrStone < game.stones + GetNumberOfStones(game.gameMode); ++ptrStone)
 		{
-			if (IsRectanglesCollide(game.player.position, { PLAYER_SIZE, PLAYER_SIZE }, game.stones[i].position, { STONE_SIZE, STONE_SIZE }))
+			if (HasPlayerCollidedWithStone(game.player, *ptrStone))
 			{
 				SetGameState(game, GameState::GameOver);
 			}
@@ -240,9 +243,9 @@ namespace ApplesGame
 
 	void DrawGameLoop(Game& game, sf::RenderWindow& window)
 	{
-		for (int i = 0; i < NUM_STONES; ++i)
+		for (Stone* ptrStone = game.stones; ptrStone < game.stones + GetNumberOfStones(game.gameMode); ++ptrStone)
 		{
-			DrawStone(game.stones[i], window);
+			DrawStone(*ptrStone, window);
 		}
 		for (Apple* ptrApple = game.apples; ptrApple < game.apples + GetNumberOfApples(game.gameMode); ++ptrApple)
 		{
@@ -346,6 +349,11 @@ namespace ApplesGame
 			AdjustNumberOfApples(game.gameMode, adjustmentType);
 			break;
 		}
+		case MenuItemType::NumberOfStones:
+		{
+			AdjustNumberOfStones(game.gameMode, adjustmentType);
+			break;
+		}
 		}
 	}
 
@@ -357,9 +365,18 @@ namespace ApplesGame
 		}
 	}
 
+	void FreeStoneMemoryAllocation(Game& game)
+	{
+		if (game.stones != nullptr) {
+			delete[] game.stones;
+			game.stones = nullptr;
+		}
+	}
+
 	void DeinitializeGame(Game& game, sf::RenderWindow& window)
 	{
 		FreeAppleMemoryAllocation(game);
+		FreeStoneMemoryAllocation(game);
 		window.close();
 	}
 }
