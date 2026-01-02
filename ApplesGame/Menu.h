@@ -15,6 +15,7 @@ namespace ApplesGame
 		InfiniteApples,
 		AcceleratePlayer,
 		CollideWithBorders,
+		SpawnSpecialApples,
 		NumberOfApples,
 		NumberOfStones
 	};

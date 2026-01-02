@@ -352,6 +352,11 @@ namespace ApplesGame
 			SwitchCollideWithBorders(game.gameMode);
 			break;
 		}
+		case MenuItemType::SpawnSpecialApples:
+		{
+			SwitchSpawnSpecialApples(game.gameMode);
+			break;
+		}
 		case MenuItemType::NumberOfApples:
 		{
 			AdjustNumberOfApples(game.gameMode, adjustmentType);
