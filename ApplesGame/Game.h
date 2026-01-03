@@ -24,8 +24,8 @@ namespace ApplesGame
 	{
 		// Global game data
 		GameState gameState{};
-		uint16_t gameMode;
-		int score = 0;
+		uint16_t gameMode = 0;
+		unsigned int score = 0;
 
 		//Resources
 		sf::Texture playerTexture;

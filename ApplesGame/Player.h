@@ -16,7 +16,7 @@ namespace ApplesGame
 	struct Player
 	{
 		Position2D position;
-		float speed;
+		float speed = 0.f;
 		PlayerDirection direction{};
 		sf::Sprite sprite;
 	};

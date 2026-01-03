@@ -207,11 +207,11 @@ namespace ApplesGame
 					
 					if (IsAppleSpecial(*ptrApple))
 					{
-						game.score += POINTS_FOR_APPLE * 2;
+						game.score += (unsigned int)(2.f * (float)POINTS_FOR_APPLE * GetScoreMultiplier(game.gameMode));
 					}
 					else
 					{
-						game.score += POINTS_FOR_APPLE;
+						game.score += (unsigned int)((float)POINTS_FOR_APPLE * GetScoreMultiplier(game.gameMode));
 					}
 
 					if (IsGameModeFlagOn(game.gameMode, GameModeFlag::AcceleratePlayer) && !(IsAppleSpecial(*ptrApple)))

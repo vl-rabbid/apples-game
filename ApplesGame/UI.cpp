@@ -79,7 +79,8 @@ namespace ApplesGame
 		}
 		case MenuState::GameModeMenu:
 		{
-			UpdateTextAndPosition(uI.note, std::bitset<16>(game.gameMode).to_string());
+			UpdateTextAndPosition(uI.note,"Mask: " + std::bitset<16>(game.gameMode).to_string() 
+				+ " Score multiplier: " + std::to_string(GetScoreMultiplier(game.gameMode)));
 
 			UpdateItemString(uI.menuItems[1], ("< Infinite Apples : " + IsGameModeFlagOnStr(game.gameMode, GameModeFlag::InfiniteApples) + " >"));
 			UpdateItemString(uI.menuItems[2], ("< Accelerate Player : " + IsGameModeFlagOnStr(game.gameMode, GameModeFlag::AcceleratePlayer) + " >"));
