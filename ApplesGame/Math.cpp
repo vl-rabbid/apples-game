@@ -85,4 +85,13 @@ namespace ApplesGame
 	{
 		return (rand() / (float)RAND_MAX) < (percent / 100.f);
 	}
+
+	std::string BoolToString(const bool& flag)
+	{
+		if (flag)
+		{
+			return "Yes";
+		}
+		return "No";
+	}
 }

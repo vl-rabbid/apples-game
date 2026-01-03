@@ -44,4 +44,6 @@ namespace ApplesGame
 	void ShiftTextPozition(sf::Text& text, float shiftX, float shiftY);
 
 	bool rollChance(float percent);
+
+	std::string BoolToString(const bool& flag);
 }

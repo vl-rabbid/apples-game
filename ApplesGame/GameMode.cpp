@@ -3,112 +3,91 @@
 
 namespace ApplesGame
 {
-	void RandomizeGameMode(GameMode& gameMode)
+	void InitGameMode(uint16_t& gameMode)
 	{
-		gameMode.infiniteApples = rand() % 2;
-		gameMode.acceleratePlayer = rand() % 2;
-		gameMode.collideWithBorders = rand() % 2;
-		gameMode.spawnSpecialApples = rand() % 2;
-		gameMode.numberOfApples = rand() % (MAX_NUM_APPLES);
-		gameMode.numberOfStones = rand() % (MAX_NUM_STONES);
+		SetGameModeFlag(gameMode, GameModeFlag::InfiniteApples);
+		SetGameModeFlag(gameMode, GameModeFlag::AcceleratePlayer);
+		SetGameModeFlag(gameMode, GameModeFlag::CollideWithBorders);
+		SetGameModeFlag(gameMode, GameModeFlag::SpawnSpecialApples);
+		SetGameModeNum(gameMode, GameModeNum::NumApplesMask, GameModeNum::NumApplesShift, 32);
+		SetGameModeNum(gameMode, GameModeNum::NumStonesMask, GameModeNum::NumStonesShift, 16);
 	}
 
-	void InitGameMode(GameMode& gameMode)
+	void RandomizeGameMode(uint16_t& gameMode)
 	{
-		gameMode.infiniteApples = true;
-		gameMode.acceleratePlayer = true;
-		gameMode.collideWithBorders = true;
-		gameMode.spawnSpecialApples = true;
-		gameMode.numberOfApples = 32;
-		gameMode.numberOfStones = 16;
+		gameMode = (rand() & 0xFF) | ((rand() & 0xFF) << 8);
 	}
 
-	bool IsInfiniteApples(const GameMode& gameMode)
+	void SwitchGameModeFlag(uint16_t& gameMode, const GameModeFlag& gameModeFlag)
 	{
-		return gameMode.infiniteApples;
+		gameMode ^= static_cast<uint16_t>(gameModeFlag);
 	}
 
-	bool IsAcceleratePlayer(const GameMode& gameMode)
+	void SetGameModeFlag(uint16_t& gameMode, const GameModeFlag& gameModeFlag)
 	{
-		return gameMode.acceleratePlayer;
+		gameMode |= static_cast<uint16_t>(gameModeFlag);
 	}
 
-	bool IsCollideWithBorders(const GameMode& gameMode)
+	bool IsGameModeFlagOn(const uint16_t& gameMode, const GameModeFlag& gameModeFlag)
 	{
-		return gameMode.collideWithBorders;
+		return gameMode & static_cast<uint16_t>(gameModeFlag);
 	}
 
-	bool IsSpawnSpecialApples(const GameMode& gameMode)
+	std::string IsGameModeFlagOnStr(const uint16_t& gameMode, const GameModeFlag& gameModeFlag)
 	{
-		return gameMode.spawnSpecialApples;
+		return BoolToString(IsGameModeFlagOn(gameMode, gameModeFlag));
 	}
 
-	int GetNumberOfApples(const GameMode& gameMode)
+	unsigned int GetGameModeNum(const uint16_t& gameMode, const GameModeNum& gameModeMask, const GameModeNum& gameModeShift)
 	{
-		return gameMode.numberOfApples;
+		return (gameMode & static_cast<uint16_t>(gameModeMask)) >> static_cast<uint16_t>(gameModeShift);
 	}
 
-	int GetNumberOfStones(const GameMode& gameMode)
+	void SetGameModeNum(uint16_t& gameMode, const GameModeNum& gameModeMask, const GameModeNum& gameModeShift, unsigned int newValue)
 	{
-		return gameMode.numberOfStones;
+		newValue <<= static_cast<uint16_t>(gameModeShift);
+		newValue &= static_cast<uint16_t>(gameModeMask);
+		gameMode &= ~static_cast<uint16_t>(gameModeMask);
+		gameMode |= static_cast<uint16_t>(newValue);
 	}
 
-	void SwitchInfiniteApples(GameMode& gameMode)
+	void AdjustGameModeNum(uint16_t& gameMode, const GameModeNum& gameModeMask, const GameModeNum& gameModeShift, const AdjustmentType& adjustmentType)
 	{
-		gameMode.infiniteApples = !gameMode.infiniteApples;
-	}
-
-	void SwitchAcceleratePlayer(GameMode& gameMode)
-	{
-		gameMode.acceleratePlayer = !gameMode.acceleratePlayer;
-	}
-
-	void SwitchCollideWithBorders(GameMode& gameMode)
-	{
-		gameMode.collideWithBorders = !gameMode.collideWithBorders;
-	}
-
-	void SwitchSpawnSpecialApples(GameMode& gameMode)
-	{
-		gameMode.spawnSpecialApples = !gameMode.spawnSpecialApples;
-	}
-
-	void AdjustNumberOfApples(GameMode& gameMode, const AdjustmentType& adjustmentType)
-	{
-		switch (adjustmentType)
+		unsigned int numValue = GetGameModeNum(gameMode, gameModeMask, gameModeShift);
+		switch(adjustmentType)
 		{
 		case AdjustmentType::Increment:
 		{
-			gameMode.numberOfApples++;
+			numValue++;
 			break;
 		}
 		case AdjustmentType::Decrement:
 		{
-			gameMode.numberOfApples--;
-			gameMode.numberOfApples += MAX_NUM_APPLES;
+			numValue--;
 			break;
 		}
 		}
-		gameMode.numberOfApples %= MAX_NUM_APPLES;
+		SetGameModeNum(gameMode, gameModeMask, gameModeShift, numValue);
 	}
 
-	void AdjustNumberOfStones(GameMode& gameMode, const AdjustmentType& adjustmentType)
+	unsigned int GetNumberOfApples(const uint16_t& gameMode)
 	{
-		switch (adjustmentType)
-		{
-		case AdjustmentType::Increment:
-		{
-			gameMode.numberOfStones++;
-			break;
-		}
-		case AdjustmentType::Decrement:
-		{
-			gameMode.numberOfStones--;
-			gameMode.numberOfStones += MAX_NUM_STONES;
-			break;
-		}
-		}
-		gameMode.numberOfStones %= MAX_NUM_STONES;
+		return GetGameModeNum(gameMode, GameModeNum::NumApplesMask, GameModeNum::NumApplesShift);
+	}
+
+	void AdjustNumberOfApples(uint16_t& gameMode, const AdjustmentType& adjustmentType)
+	{
+		AdjustGameModeNum(gameMode, GameModeNum::NumApplesMask, GameModeNum::NumApplesShift, adjustmentType);
+	}
+
+	unsigned int GetNumberOfStones(const uint16_t& gameMode)
+	{
+		return GetGameModeNum(gameMode, GameModeNum::NumStonesMask, GameModeNum::NumStonesShift);
+	}
+
+	void AdjustNumberOfStones(uint16_t& gameMode, const AdjustmentType& adjustmentType)
+	{
+		AdjustGameModeNum(gameMode, GameModeNum::NumStonesMask, GameModeNum::NumStonesShift, adjustmentType);
 	}
 }
 

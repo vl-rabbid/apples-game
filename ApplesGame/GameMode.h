@@ -1,43 +1,48 @@
 #pragma once
 #include "Math.h"
+#include <string>
 
 namespace ApplesGame
 {
-	struct GameMode
+	enum class GameModeFlag : uint16_t
 	{
-		bool infiniteApples;
-		bool acceleratePlayer;
-		bool collideWithBorders;
-		bool spawnSpecialApples;
-		int numberOfApples;
-		int numberOfStones;
+		InfiniteApples = (1 << 15),
+		AcceleratePlayer = (1 << 14),
+		CollideWithBorders = (1 << 13),
+		SpawnSpecialApples = (1 << 12)
 	};
 
-	void RandomizeGameMode(GameMode& gameMode);
+	enum class GameModeNum : uint16_t
+	{
+		NumApplesMask = 0x003F,
+		NumApplesShift = 0,
+		NumStonesMask = 0x0FC0,
+		NumStonesShift = 6
+	};
 
-	void InitGameMode(GameMode& gameMode);
+	void InitGameMode(uint16_t& gameMode);
 
-	bool IsInfiniteApples(const GameMode& gameMode);
+	void RandomizeGameMode(uint16_t& gameMode);
 
-	bool IsAcceleratePlayer(const GameMode& gameMode);
+	void SwitchGameModeFlag(uint16_t& gameMode, const GameModeFlag& gameModeFlag);
 
-	bool IsCollideWithBorders(const GameMode& gameMode);
+	void SetGameModeFlag(uint16_t& gameMode, const GameModeFlag& gameModeFlag);
 
-	bool IsSpawnSpecialApples(const GameMode& gameMode);
+	bool IsGameModeFlagOn(const uint16_t& gameMode, const GameModeFlag& gameModeFlag);
 
-	int GetNumberOfApples(const GameMode& gameMode);
+	std::string IsGameModeFlagOnStr(const uint16_t& gameMode, const GameModeFlag& gameModeFlag);
 
-	int GetNumberOfStones(const GameMode& gameMode);
+	unsigned int GetGameModeNum(const uint16_t& gameMode, const GameModeNum& gameModeMask, const GameModeNum& gameModeShift);
 
-	void SwitchInfiniteApples(GameMode& gameMode);
+	void SetGameModeNum(uint16_t& gameMode, const GameModeNum& gameModeMask, const GameModeNum& gameModeShift, unsigned int newValue);
 
-	void SwitchAcceleratePlayer(GameMode& gameMode);
+	void AdjustGameModeNum(uint16_t& gameMode, const GameModeNum& gameModeMask, const GameModeNum& gameModeShift, const AdjustmentType& adjustmentType);
 
-	void SwitchCollideWithBorders(GameMode& gameMode);
+	unsigned int GetNumberOfApples(const uint16_t& gameMode);
 
-	void SwitchSpawnSpecialApples(GameMode& gameMode);
+	void AdjustNumberOfApples(uint16_t& gameMode, const AdjustmentType& adjustmentType);
 
-	void AdjustNumberOfApples(GameMode& gameMode, const AdjustmentType& adjustmentType);
+	unsigned int GetNumberOfStones(const uint16_t& gameMode);
 
-	void AdjustNumberOfStones(GameMode& gameMode, const AdjustmentType& adjustmentType);
+	void AdjustNumberOfStones(uint16_t& gameMode, const AdjustmentType& adjustmentType);
 }
