@@ -89,5 +89,46 @@ namespace ApplesGame
 	{
 		AdjustGameModeNum(gameMode, GameModeNum::NumStonesMask, GameModeNum::NumStonesShift, adjustmentType);
 	}
+
+	float GetScoreMultiplier(const uint16_t& gameMode)
+	{
+		float scoreMultiplier = 1.f;
+		if (!IsGameModeFlagOn(gameMode, GameModeFlag::InfiniteApples))
+		{
+			scoreMultiplier *= 2.f;
+		}
+		if (!IsGameModeFlagOn(gameMode, GameModeFlag::AcceleratePlayer))
+		{
+			scoreMultiplier *= 0.5f;
+		}
+		if (!IsGameModeFlagOn(gameMode, GameModeFlag::CollideWithBorders))
+		{
+			scoreMultiplier *= 0.8f;
+		}
+		if (!IsGameModeFlagOn(gameMode, GameModeFlag::SpawnSpecialApples))
+		{
+			scoreMultiplier *= 1.25f;
+		}
+
+		if (GetNumberOfApples(gameMode) > 32)
+		{
+			scoreMultiplier *= 0.5f + 0.5f * (1.f - (((float)GetNumberOfApples(gameMode) - 32.f)/31.f));
+		}
+		else
+		{
+			scoreMultiplier *= 2.f - ((float)GetNumberOfApples(gameMode) / 32.f);
+		}
+
+		if (GetNumberOfStones(gameMode) > 16)
+		{
+			scoreMultiplier *= 1.f + 2.f * (((float)GetNumberOfStones(gameMode) - 16.f) / 47.f);
+		}
+		else
+		{
+			scoreMultiplier *= 0.5f + 0.5f * ((float)GetNumberOfStones(gameMode) / 16.f);
+		}
+
+		return scoreMultiplier;
+	}
 }
 

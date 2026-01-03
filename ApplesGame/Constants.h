@@ -11,7 +11,7 @@ namespace ApplesGame
 	const float PLAYER_SIZE = 20.f;
 	const float APPLE_SIZE = 20.f;
 	const float SPECIAL_APPLE_CHANCE = 10;
-	const int POINTS_FOR_APPLE = 10;
+	const int POINTS_FOR_APPLE = 100;
 	const float STONE_SIZE = 15.f;
 	const int NUM_MENU_ITEMS = 8;
 }

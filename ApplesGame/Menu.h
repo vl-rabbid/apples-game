@@ -32,7 +32,7 @@ namespace ApplesGame
 	{
 		sf::Text text;
 		MenuItemType itemType{};
-		bool isActive;
+		bool isActive = false;
 	};
 
 	void SetMenuItem(MenuItem& menuItem, std::string textTitle,const MenuItemType& menuItemType);

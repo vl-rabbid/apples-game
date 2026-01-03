@@ -45,4 +45,6 @@ namespace ApplesGame
 	unsigned int GetNumberOfStones(const uint16_t& gameMode);
 
 	void AdjustNumberOfStones(uint16_t& gameMode, const AdjustmentType& adjustmentType);
+
+	float GetScoreMultiplier(const uint16_t& gameMode);
 }
