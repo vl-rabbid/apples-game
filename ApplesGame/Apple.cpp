@@ -17,7 +17,7 @@ namespace ApplesGame
 		SetSpriteRelativeOrigin(apple.sprite, 0.5f, 0.5f);
 
 		// Special apple
-		if (IsSpawnSpecialApples(game.gameMode))
+		if (IsGameModeFlagOn(game.gameMode, GameModeFlag::SpawnSpecialApples))
 		{
 			if (rollChance(SPECIAL_APPLE_CHANCE))
 			{

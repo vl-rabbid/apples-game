@@ -214,11 +214,11 @@ namespace ApplesGame
 						game.score += POINTS_FOR_APPLE;
 					}
 
-					if (IsAcceleratePlayer(game.gameMode) && !(IsAppleSpecial(*ptrApple)))
+					if (IsGameModeFlagOn(game.gameMode, GameModeFlag::AcceleratePlayer) && !(IsAppleSpecial(*ptrApple)))
 					{
 						game.player.speed += ACCELERATION;
 					}
-					if (IsInfiniteApples(game.gameMode))
+					if (IsGameModeFlagOn(game.gameMode, GameModeFlag::InfiniteApples))
 					{
 						InitApple(*ptrApple, game);
 					}
@@ -231,9 +231,9 @@ namespace ApplesGame
 		}
 
 		// Check border collision
-		if (HasPlayerCollidedWithScreenBorder(game.player))
+		if (IsGameModeFlagOn(game.gameMode, GameModeFlag::CollideWithBorders))
 		{
-			if (IsCollideWithBorders(game.gameMode))
+			if (HasPlayerCollidedWithScreenBorder(game.player))
 			{
 				SetGameState(game, GameState::GameOver);
 			}
@@ -339,22 +339,23 @@ namespace ApplesGame
 		{
 		case MenuItemType::InfiniteApples:
 		{
-			SwitchInfiniteApples(game.gameMode);
+			SwitchGameModeFlag(game.gameMode, GameModeFlag::InfiniteApples);
 			break;
 		}
 		case MenuItemType::AcceleratePlayer:
 		{
-			SwitchAcceleratePlayer(game.gameMode);
+			SwitchGameModeFlag(game.gameMode, GameModeFlag::AcceleratePlayer);
 			break;
 		}
 		case MenuItemType::CollideWithBorders:
 		{
-			SwitchCollideWithBorders(game.gameMode);
+
+			SwitchGameModeFlag(game.gameMode, GameModeFlag::CollideWithBorders);
 			break;
 		}
 		case MenuItemType::SpawnSpecialApples:
 		{
-			SwitchSpawnSpecialApples(game.gameMode);
+			SwitchGameModeFlag(game.gameMode, GameModeFlag::SpawnSpecialApples);
 			break;
 		}
 		case MenuItemType::NumberOfApples:

@@ -24,7 +24,7 @@ namespace ApplesGame
 	{
 		// Global game data
 		GameState gameState{};
-		GameMode gameMode{};
+		uint16_t gameMode;
 		int score = 0;
 
 		//Resources
