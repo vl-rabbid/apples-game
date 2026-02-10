@@ -2,8 +2,6 @@
 #include "Game.h"
 #include "Math.h"
 #include <SFML/Graphics.hpp>
-#include <string>
-#include <bitset>
 
 namespace ApplesGame
 {
@@ -79,13 +77,12 @@ namespace ApplesGame
 		}
 		case MenuState::GameModeMenu:
 		{
-			UpdateTextAndPosition(uI.note,"Mask: " + std::bitset<16>(game.gameMode).to_string() 
-				+ " Score multiplier: " + std::to_string(GetScoreMultiplier(game.gameMode)));
+			UpdateTextAndPosition(uI.note,"Try every combination!!!");
 
-			UpdateItemString(uI.menuItems[1], ("< Infinite Apples : " + IsGameModeFlagOnStr(game.gameMode, GameModeFlag::InfiniteApples) + " >"));
-			UpdateItemString(uI.menuItems[2], ("< Accelerate Player : " + IsGameModeFlagOnStr(game.gameMode, GameModeFlag::AcceleratePlayer) + " >"));
-			UpdateItemString(uI.menuItems[3], ("< Collide with Borders : " + IsGameModeFlagOnStr(game.gameMode, GameModeFlag::CollideWithBorders) + " >"));
-			UpdateItemString(uI.menuItems[4], ("< Spawn special Apples : " + IsGameModeFlagOnStr(game.gameMode, GameModeFlag::SpawnSpecialApples) + " >"));
+			UpdateItemString(uI.menuItems[1], ("< Infinite Apples : " + BoolToString(IsGameModeFlagOn(game.gameMode, GameModeFlag::InfiniteApples)) + " >"));
+			UpdateItemString(uI.menuItems[2], ("< Accelerate Player : " + BoolToString(IsGameModeFlagOn(game.gameMode, GameModeFlag::AcceleratePlayer)) + " >"));
+			UpdateItemString(uI.menuItems[3], ("< Collide with Borders : " + BoolToString(IsGameModeFlagOn(game.gameMode, GameModeFlag::CollideWithBorders)) + " >"));
+			UpdateItemString(uI.menuItems[4], ("< Spawn special Apples : " + BoolToString(IsGameModeFlagOn(game.gameMode, GameModeFlag::SpawnSpecialApples)) + " >"));
 			UpdateItemString(uI.menuItems[5], ("< Number of Apples : " + std::to_string(GetNumberOfApples(game.gameMode)) + " >"));
 			UpdateItemString(uI.menuItems[6], ("< Number of Stones : " + std::to_string(GetNumberOfStones(game.gameMode)) + " >"));
 			break;
