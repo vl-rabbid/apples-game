@@ -1,6 +1,5 @@
 #pragma once
 #include "Math.h"
-#include <string>
 
 namespace ApplesGame
 {
@@ -28,23 +27,21 @@ namespace ApplesGame
 
 	void SetGameModeFlag(uint16_t& gameMode, const GameModeFlag& gameModeFlag);
 
-	bool IsGameModeFlagOn(const uint16_t& gameMode, const GameModeFlag& gameModeFlag);
+	bool IsGameModeFlagOn(uint16_t gameMode, const GameModeFlag& gameModeFlag);
 
-	std::string IsGameModeFlagOnStr(const uint16_t& gameMode, const GameModeFlag& gameModeFlag);
-
-	unsigned int GetGameModeNum(const uint16_t& gameMode, const GameModeNum& gameModeMask, const GameModeNum& gameModeShift);
+	unsigned int GetGameModeNum(uint16_t gameMode, const GameModeNum& gameModeMask, const GameModeNum& gameModeShift);
 
 	void SetGameModeNum(uint16_t& gameMode, const GameModeNum& gameModeMask, const GameModeNum& gameModeShift, unsigned int newValue);
 
 	void AdjustGameModeNum(uint16_t& gameMode, const GameModeNum& gameModeMask, const GameModeNum& gameModeShift, const AdjustmentType& adjustmentType);
 
-	unsigned int GetNumberOfApples(const uint16_t& gameMode);
+	unsigned int GetNumberOfApples(uint16_t gameMode);
 
 	void AdjustNumberOfApples(uint16_t& gameMode, const AdjustmentType& adjustmentType);
 
-	unsigned int GetNumberOfStones(const uint16_t& gameMode);
+	unsigned int GetNumberOfStones(uint16_t gameMode);
 
 	void AdjustNumberOfStones(uint16_t& gameMode, const AdjustmentType& adjustmentType);
 
-	float GetScoreMultiplier(const uint16_t& gameMode);
+	float GetScoreMultiplier(uint16_t gameMode);
 }

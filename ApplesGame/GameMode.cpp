@@ -28,17 +28,12 @@ namespace ApplesGame
 		gameMode |= static_cast<uint16_t>(gameModeFlag);
 	}
 
-	bool IsGameModeFlagOn(const uint16_t& gameMode, const GameModeFlag& gameModeFlag)
+	bool IsGameModeFlagOn(uint16_t gameMode, const GameModeFlag& gameModeFlag)
 	{
 		return gameMode & static_cast<uint16_t>(gameModeFlag);
 	}
 
-	std::string IsGameModeFlagOnStr(const uint16_t& gameMode, const GameModeFlag& gameModeFlag)
-	{
-		return BoolToString(IsGameModeFlagOn(gameMode, gameModeFlag));
-	}
-
-	unsigned int GetGameModeNum(const uint16_t& gameMode, const GameModeNum& gameModeMask, const GameModeNum& gameModeShift)
+	unsigned int GetGameModeNum(uint16_t gameMode, const GameModeNum& gameModeMask, const GameModeNum& gameModeShift)
 	{
 		return (gameMode & static_cast<uint16_t>(gameModeMask)) >> static_cast<uint16_t>(gameModeShift);
 	}
@@ -70,7 +65,7 @@ namespace ApplesGame
 		SetGameModeNum(gameMode, gameModeMask, gameModeShift, numValue);
 	}
 
-	unsigned int GetNumberOfApples(const uint16_t& gameMode)
+	unsigned int GetNumberOfApples(uint16_t gameMode)
 	{
 		return GetGameModeNum(gameMode, GameModeNum::NumApplesMask, GameModeNum::NumApplesShift);
 	}
@@ -80,7 +75,7 @@ namespace ApplesGame
 		AdjustGameModeNum(gameMode, GameModeNum::NumApplesMask, GameModeNum::NumApplesShift, adjustmentType);
 	}
 
-	unsigned int GetNumberOfStones(const uint16_t& gameMode)
+	unsigned int GetNumberOfStones(uint16_t gameMode)
 	{
 		return GetGameModeNum(gameMode, GameModeNum::NumStonesMask, GameModeNum::NumStonesShift);
 	}
@@ -90,7 +85,7 @@ namespace ApplesGame
 		AdjustGameModeNum(gameMode, GameModeNum::NumStonesMask, GameModeNum::NumStonesShift, adjustmentType);
 	}
 
-	float GetScoreMultiplier(const uint16_t& gameMode)
+	float GetScoreMultiplier(uint16_t gameMode)
 	{
 		float scoreMultiplier = 1.f;
 		if (!IsGameModeFlagOn(gameMode, GameModeFlag::InfiniteApples))
