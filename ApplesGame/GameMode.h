@@ -16,10 +16,10 @@ namespace ApplesGame
 
 	enum class GameModeFlag : uint32_t
 	{
-		InfiniteApples = (1 << 31),
-		AcceleratePlayer = (1 << 30),
-		CollideWithBorders = (1 << 29),
-		SpawnSpecialApples = (1 << 28)
+		InfiniteApples = (1 << 17),
+		AcceleratePlayer = (1 << 18),
+		CollideWithBorders = (1 << 19),
+		SpawnSpecialApples = (1 << 20)
 	};
 
 	void InitGameMode(uint32_t& gameMode);
@@ -28,17 +28,19 @@ namespace ApplesGame
 
 	void SwitchGameModeFlag(uint32_t& gameMode, const GameModeFlag& gameModeFlag);
 
-	void SetGameModeFlag(uint32_t& gameMode, const GameModeFlag& gameModeFlag);
+	void SetGameModeFlag(uint32_t& gameMode, const GameModeFlag& gameModeFlag, bool newValue);
 
 	bool IsGameModeFlagOn(uint32_t gameMode, const GameModeFlag& gameModeFlag);
 
-	unsigned int GetNumberOfApples(uint32_t gameMode);
+	uint32_t GetNumberOfApples(uint32_t gameMode);
 
 	void AdjustNumberOfApples(uint32_t& gameMode, const AdjustmentType& adjustmentType);
 
-	unsigned int GetNumberOfStones(uint32_t gameMode);
+	uint32_t GetNumberOfStones(uint32_t gameMode);
 
 	void AdjustNumberOfStones(uint32_t& gameMode, const AdjustmentType& adjustmentType);
 
 	float GetScoreMultiplier(uint32_t gameMode);
+
+	bool isGameModeConsistent(uint32_t gameMode);
 }

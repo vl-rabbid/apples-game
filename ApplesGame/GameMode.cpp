@@ -19,27 +19,48 @@ namespace ApplesGame
 
 	void InitGameMode(uint32_t& gameMode)
 	{
-		SetGameModeFlag(gameMode, GameModeFlag::InfiniteApples);
-		SetGameModeFlag(gameMode, GameModeFlag::AcceleratePlayer);
-		SetGameModeFlag(gameMode, GameModeFlag::CollideWithBorders);
-		SetGameModeFlag(gameMode, GameModeFlag::SpawnSpecialApples);
+		SetGameModeFlag(gameMode, GameModeFlag::InfiniteApples, true);
+		SetGameModeFlag(gameMode, GameModeFlag::AcceleratePlayer, true);
+		SetGameModeFlag(gameMode, GameModeFlag::CollideWithBorders, true);
+		SetGameModeFlag(gameMode, GameModeFlag::SpawnSpecialApples, true);
 		SetGameModeNum(gameMode, NumberOfApples, 32);
 		SetGameModeNum(gameMode, NumberOfStones, 16);
 	}
 
 	void RandomizeGameMode(uint32_t& gameMode)
 	{
-		gameMode = (rand() & 0xFF) | ((rand() & 0xFF) << 8);
+		SetGameModeNum(gameMode, NumberOfApples, (rand() % NumberOfApples.max_value + NumberOfApples.min_value));
+		SetGameModeNum(gameMode, NumberOfStones, (rand() % NumberOfStones.max_value + NumberOfStones.min_value));
+		SetGameModeFlag(gameMode, GameModeFlag::InfiniteApples, (rand() % 2));
+		SetGameModeFlag(gameMode, GameModeFlag::AcceleratePlayer, (rand() % 2));
+		SetGameModeFlag(gameMode, GameModeFlag::CollideWithBorders, (rand() % 2));
+		SetGameModeFlag(gameMode, GameModeFlag::SpawnSpecialApples, (rand() % 2));
+
+		if (!isGameModeConsistent(gameMode))
+		{
+			SetGameModeFlag(gameMode, GameModeFlag::CollideWithBorders, true);
+		}
 	}
 
 	void SwitchGameModeFlag(uint32_t& gameMode, const GameModeFlag& gameModeFlag)
 	{
-		gameMode ^= static_cast<uint32_t>(gameModeFlag);
+		uint32_t newGameModeValue = gameMode ^ static_cast<uint32_t>(gameModeFlag);
+		if (isGameModeConsistent(newGameModeValue))
+		{
+			gameMode = newGameModeValue;
+		}
 	}
 
-	void SetGameModeFlag(uint32_t& gameMode, const GameModeFlag& gameModeFlag)
+	void SetGameModeFlag(uint32_t& gameMode, const GameModeFlag& gameModeFlag, bool newValue)
 	{
-		gameMode |= static_cast<uint32_t>(gameModeFlag);
+		if (newValue)
+		{
+			gameMode |= static_cast<uint32_t>(gameModeFlag);
+		}
+		else
+		{
+			gameMode &= ~static_cast<uint32_t>(gameModeFlag);
+		}
 	}
 
 	bool IsGameModeFlagOn(uint32_t gameMode, const GameModeFlag& gameModeFlag)
@@ -47,7 +68,7 @@ namespace ApplesGame
 		return gameMode & static_cast<uint32_t>(gameModeFlag);
 	}
 
-	unsigned int GetGameModeNum(uint32_t gameMode, const GameModeNum& gameModeNum)
+	uint32_t GetGameModeNum(uint32_t gameMode, const GameModeNum& gameModeNum)
 	{
 		return (gameMode & static_cast<uint32_t>(gameModeNum.mask)) >> static_cast<uint32_t>(gameModeNum.shift);
 	}
@@ -55,6 +76,7 @@ namespace ApplesGame
 	void AdjustGameModeNum(uint32_t& gameMode, const GameModeNum& gameModeNum, const AdjustmentType& adjustmentType)
 	{
 		uint8_t numValue = GetGameModeNum(gameMode, gameModeNum);
+		uint32_t newGameModeValue = gameMode;
 		switch(adjustmentType)
 		{
 		case AdjustmentType::Increment:
@@ -62,7 +84,7 @@ namespace ApplesGame
 			if ((numValue) < gameModeNum.max_value)
 			{
 				numValue++;
-				SetGameModeNum(gameMode, gameModeNum, numValue);
+				SetGameModeNum(newGameModeValue, gameModeNum, numValue);
 			}
 			break;
 		}
@@ -71,10 +93,14 @@ namespace ApplesGame
 			if ((numValue) > gameModeNum.min_value)
 			{
 				numValue--;
-				SetGameModeNum(gameMode, gameModeNum, numValue);
+				SetGameModeNum(newGameModeValue, gameModeNum, numValue);
 			}
 			break;
 		}
+		}
+		if (isGameModeConsistent(newGameModeValue))
+		{
+			gameMode = newGameModeValue;
 		}
 	}
 
@@ -88,7 +114,7 @@ namespace ApplesGame
 		AdjustGameModeNum(gameMode, NumberOfApples, adjustmentType);
 	}
 
-	unsigned int GetNumberOfStones(uint32_t gameMode)
+	uint32_t GetNumberOfStones(uint32_t gameMode)
 	{
 		return GetGameModeNum(gameMode, NumberOfStones);
 	}
@@ -137,6 +163,16 @@ namespace ApplesGame
 		}
 
 		return scoreMultiplier;
+	}
+
+	bool isGameModeConsistent(uint32_t gameMode)
+	{
+		// An ability for player to finish a game
+		if (GetNumberOfStones(gameMode) == 0 && !IsGameModeFlagOn(gameMode, GameModeFlag::CollideWithBorders))
+		{
+			return false;
+		}
+		return true;
 	}
 }
 
