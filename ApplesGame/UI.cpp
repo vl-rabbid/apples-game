@@ -37,12 +37,12 @@ namespace ApplesGame
 		}
 
 		// Init Score
-		uI.score.setString("score");
-		uI.score.setFont(game.font);
-		uI.score.setCharacterSize(20);
-		uI.score.setFillColor(sf::Color::Yellow);
-		SetTextRelativeOrigin(uI.score, 0.f, 0.f);
-		SetTextScreenRelativePosition(uI.score, SCREEN_WIDTH, SCREEN_HEIGHT, 0.01f, 0.01f);
+		uI.playerScore.setString("score");
+		uI.playerScore.setFont(game.font);
+		uI.playerScore.setCharacterSize(20);
+		uI.playerScore.setFillColor(sf::Color::Yellow);
+		SetTextRelativeOrigin(uI.playerScore, 0.f, 0.f);
+		SetTextScreenRelativePosition(uI.playerScore, SCREEN_WIDTH, SCREEN_HEIGHT, 0.01f, 0.01f);
 
 		//Init tint
 		uI.tint.setFillColor(sf::Color(0, 0, 0, 180));
@@ -51,12 +51,12 @@ namespace ApplesGame
 
 	void UpdateHUD(UI& uI, const Game& game)
 	{
-		UpdateTextAndPosition(uI.score, "Score: " + std::to_string(game.score));
+		UpdateTextAndPosition(uI.playerScore, "Score: " + std::to_string(game.playerScore));
 	}
 
 	void DrawHUD(UI& uI, sf::RenderWindow& window)
 	{
-		window.draw(uI.score);
+		window.draw(uI.playerScore);
 	}
 
 	void UpdateMenu(UI& uI, const Game& game)
@@ -89,12 +89,12 @@ namespace ApplesGame
 		}
 		case MenuState::PauseMenu:
 		{
-			UpdateTextAndPosition(uI.note, "Current score: " + std::to_string(game.score));
+			UpdateTextAndPosition(uI.note, "Current score: " + std::to_string(game.playerScore));
 			break;
 		}
 		case MenuState::GameOverMenu:
 		{
-			UpdateTextAndPosition(uI.note, "Final score: " + std::to_string(game.score));
+			UpdateTextAndPosition(uI.note, "Final score: " + std::to_string(game.playerScore));
 			break;
 		}
 		}

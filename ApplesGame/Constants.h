@@ -18,4 +18,5 @@ namespace ApplesGame
 	const int POINTS_FOR_APPLE = 100;
 	const float STONE_SIZE = 15.f;
 	const int NUM_MENU_ITEMS = 8;
+	const int LEADERBOARD_DISPLAY_SIZE = 5;
 }

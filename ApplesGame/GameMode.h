@@ -1,5 +1,6 @@
 #pragma once
 #include "Math.h"
+#include <vector>
 
 namespace ApplesGame
 {
@@ -9,6 +10,12 @@ namespace ApplesGame
 		uint32_t mask;
 		uint8_t max_value;
 		uint8_t min_value;
+	};
+
+	struct Record
+	{
+		std::string name;
+		int score;
 	};
 
 	extern const GameModeNum NumberOfApples;
@@ -23,6 +30,8 @@ namespace ApplesGame
 	};
 
 	void InitGameMode(uint32_t& gameMode);
+
+	void InitLeaderboard(std::vector<Record>& leaderboard);
 
 	void RandomizeGameMode(uint32_t& gameMode);
 
