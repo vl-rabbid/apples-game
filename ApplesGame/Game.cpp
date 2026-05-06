@@ -174,7 +174,7 @@ namespace ApplesGame
 
 	void StartGameLoop(Game& game)
 	{
-		game.score = 0;
+		game.playerScore = 0;
 		InitPlayer(game.player, game);
 
 		FreeAppleMemoryAllocation(game);
@@ -207,11 +207,11 @@ namespace ApplesGame
 					
 					if (IsAppleSpecial(*ptrApple))
 					{
-						game.score += (unsigned int)(2.f * (float)POINTS_FOR_APPLE * GetScoreMultiplier(game.gameMode));
+						game.playerScore += (unsigned int)(2.f * (float)POINTS_FOR_APPLE * GetScoreMultiplier(game.gameMode));
 					}
 					else
 					{
-						game.score += (unsigned int)((float)POINTS_FOR_APPLE * GetScoreMultiplier(game.gameMode));
+						game.playerScore += (unsigned int)((float)POINTS_FOR_APPLE * GetScoreMultiplier(game.gameMode));
 					}
 
 					if (IsGameModeFlagOn(game.gameMode, GameModeFlag::AcceleratePlayer) && !(IsAppleSpecial(*ptrApple)))

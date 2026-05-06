@@ -23,6 +23,10 @@ namespace ApplesGame
 
 	typedef Vector2D Position2D;
 
+	float GetRandomFloat(float minValue, float maxValue);
+
+	int GetRandomInt(int minValue, int maxValue);
+
 	Position2D GetRandomPositionInScreen(float screenWidth, float screenHeight);
 
 	bool IsRectanglesCollide(Position2D rect1Position, Vector2D rect1Size, Position2D rect2Position, Vector2D rect2Size);

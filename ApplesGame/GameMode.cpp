@@ -27,14 +27,24 @@ namespace ApplesGame
 		SetGameModeNum(gameMode, NumberOfStones, 16);
 	}
 
+	void InitLeaderboard(std::vector<Record>& leaderboard)
+	{
+		leaderboard.clear();
+		leaderboard.push_back({ "Alice", GetRandomInt(1000,10000)});
+		leaderboard.push_back({ "Bob", GetRandomInt(1000,10000) });
+		leaderboard.push_back({ "Carol", GetRandomInt(1000,10000) });
+		leaderboard.push_back({ "Dave", GetRandomInt(1000,10000) });
+		leaderboard.push_back({ "John", GetRandomInt(1000,10000) });
+	}
+
 	void RandomizeGameMode(uint32_t& gameMode)
 	{
-		SetGameModeNum(gameMode, NumberOfApples, (rand() % NumberOfApples.max_value + NumberOfApples.min_value));
-		SetGameModeNum(gameMode, NumberOfStones, (rand() % NumberOfStones.max_value + NumberOfStones.min_value));
-		SetGameModeFlag(gameMode, GameModeFlag::InfiniteApples, (rand() % 2));
-		SetGameModeFlag(gameMode, GameModeFlag::AcceleratePlayer, (rand() % 2));
-		SetGameModeFlag(gameMode, GameModeFlag::CollideWithBorders, (rand() % 2));
-		SetGameModeFlag(gameMode, GameModeFlag::SpawnSpecialApples, (rand() % 2));
+		SetGameModeNum(gameMode, NumberOfApples, GetRandomInt(NumberOfApples.min_value, NumberOfApples.max_value));
+		SetGameModeNum(gameMode, NumberOfStones, GetRandomInt(NumberOfStones.min_value, NumberOfStones.max_value));
+		SetGameModeFlag(gameMode, GameModeFlag::InfiniteApples, GetRandomInt(0, 1));
+		SetGameModeFlag(gameMode, GameModeFlag::AcceleratePlayer, GetRandomInt(0, 1));
+		SetGameModeFlag(gameMode, GameModeFlag::CollideWithBorders, GetRandomInt(0, 1));
+		SetGameModeFlag(gameMode, GameModeFlag::SpawnSpecialApples, GetRandomInt(0, 1));
 
 		if (!isGameModeConsistent(gameMode))
 		{

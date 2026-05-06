@@ -5,11 +5,21 @@
 
 namespace ApplesGame
 {
+	float GetRandomFloat(float minValue, float maxValue)
+	{
+		return minValue + (rand() / (float)RAND_MAX) * (maxValue - minValue);
+	}
+
+	int GetRandomInt(int minValue, int maxValue)
+	{
+		return minValue + rand() % (maxValue - minValue + 1);
+	}
+
 	Position2D GetRandomPositionInScreen(float screenWidth, float screenHeight)
 	{
 		Position2D result;
-		result.x = rand() / (float)RAND_MAX * screenWidth;
-		result.y = rand() / (float)RAND_MAX * screenHeight;
+		result.x = GetRandomFloat(0, screenWidth);
+		result.y = GetRandomFloat(0, screenHeight);
 		return result;
 	}
 
@@ -83,7 +93,7 @@ namespace ApplesGame
 
 	bool rollChance(float percent)
 	{
-		return (rand() / (float)RAND_MAX) < (percent / 100.f);
+		return GetRandomFloat(0, 100) <= percent;
 	}
 
 	std::string BoolToString(const bool& flag)

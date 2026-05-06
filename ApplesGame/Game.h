@@ -25,7 +25,8 @@ namespace ApplesGame
 		// Global game data
 		GameState gameState{};
 		uint32_t gameMode = 0;
-		unsigned int score = 0;
+		int playerScore = 0;
+		std::vector<Record> leaderboard;
 
 		//Resources
 		sf::Texture playerTexture;

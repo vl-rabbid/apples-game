@@ -8,7 +8,7 @@ namespace ApplesGame
 	struct UI
 	{
 		// HUD
-		sf::Text score;
+		sf::Text playerScore;
 
 		// Menus
 		sf::Text title;
