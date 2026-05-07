@@ -27,16 +27,6 @@ namespace ApplesGame
 		SetGameModeNum(gameMode, NumberOfStones, 16);
 	}
 
-	void InitLeaderboard(std::vector<Record>& leaderboard)
-	{
-		leaderboard.clear();
-		leaderboard.push_back({ "Alice", GetRandomInt(1000,10000)});
-		leaderboard.push_back({ "Bob", GetRandomInt(1000,10000) });
-		leaderboard.push_back({ "Carol", GetRandomInt(1000,10000) });
-		leaderboard.push_back({ "Dave", GetRandomInt(1000,10000) });
-		leaderboard.push_back({ "John", GetRandomInt(1000,10000) });
-	}
-
 	void RandomizeGameMode(uint32_t& gameMode)
 	{
 		SetGameModeNum(gameMode, NumberOfApples, GetRandomInt(NumberOfApples.min_value, NumberOfApples.max_value));

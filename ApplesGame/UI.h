@@ -17,6 +17,10 @@ namespace ApplesGame
 		MenuState menuState{};
 		MenuItem menuItems[NUM_MENU_ITEMS];
 		sf::RectangleShape tint;
+
+		// Leaderboard
+		bool showLeaderboard;
+		sf::Text leaderboardItems[LEADERBOARD_DISPLAY_SIZE];
 	};
 
 	struct Game;
@@ -42,4 +46,8 @@ namespace ApplesGame
 	void MoveMenuUp(UI& uI);
 
 	void MoveMenuDown(UI& uI);
+
+	void SetMenuItemsPosition(UI& uI, float shiftX, float shiftY);
+
+	void LoadLeaderboard(UI& uI, const Game& game);
 }

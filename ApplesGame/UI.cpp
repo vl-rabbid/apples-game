@@ -14,15 +14,15 @@ namespace ApplesGame
 		uI.title.setCharacterSize(100);
 		uI.title.setFillColor(sf::Color::Yellow);
 		SetTextRelativeOrigin(uI.title, 0.5f, 0.5f);
-		SetTextScreenRelativePosition(uI.title, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.15f);
+		SetTextScreenRelativePosition(uI.title, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.1f);
 
 		// Init Note
 		uI.note.setString("note");
 		uI.note.setFont(game.font);
-		uI.note.setCharacterSize(25);
+		uI.note.setCharacterSize(30);
 		uI.note.setFillColor(sf::Color::Yellow);
 		SetTextRelativeOrigin(uI.note, 0.5f, 0.5f);
-		SetTextScreenRelativePosition(uI.note, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.3f);
+		SetTextScreenRelativePosition(uI.note, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.25f);
 
 		// Init Menu Items
 		for (int i = 0; i < NUM_MENU_ITEMS; i++)
@@ -32,11 +32,9 @@ namespace ApplesGame
 			uI.menuItems[i].text.setCharacterSize(32);
 			uI.menuItems[i].text.setFillColor(sf::Color::Yellow);
 			SetTextRelativeOrigin(uI.menuItems[i].text, 0.5f, 0.5f);
-			SetTextScreenRelativePosition(uI.menuItems[i].text, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.4f);
-			ShiftTextPozition(uI.menuItems[i].text, 0.f, 42.f * i);
 		}
 
-		// Init Score
+		// Init Player Score
 		uI.playerScore.setString("score");
 		uI.playerScore.setFont(game.font);
 		uI.playerScore.setCharacterSize(20);
@@ -47,6 +45,19 @@ namespace ApplesGame
 		//Init tint
 		uI.tint.setFillColor(sf::Color(0, 0, 0, 180));
 		uI.tint.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
+
+		//Init Leaderboard
+		uI.showLeaderboard = false;
+		for (int i = 0; i < LEADERBOARD_DISPLAY_SIZE; i++)
+		{
+			uI.leaderboardItems[i].setString("score " + std::to_string(i));
+			uI.leaderboardItems[i].setFont(game.font);
+			uI.leaderboardItems[i].setCharacterSize(32);
+			uI.leaderboardItems[i].setFillColor(sf::Color::Yellow);
+			SetTextRelativeOrigin(uI.leaderboardItems[i], 0.5f, 0.5f);
+			SetTextScreenRelativePosition(uI.leaderboardItems[i], SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.4f);
+			ShiftTextPozition(uI.leaderboardItems[i], 0.f, 42.f * i);
+		}
 	}
 
 	void UpdateHUD(UI& uI, const Game& game)
@@ -94,7 +105,12 @@ namespace ApplesGame
 		}
 		case MenuState::GameOverMenu:
 		{
-			UpdateTextAndPosition(uI.note, "Final score: " + std::to_string(game.playerScore));
+			UpdateTextAndPosition(uI.note, "Leaderboard");
+			break;
+		}
+		case MenuState::LeaderboardMenu:
+		{
+			UpdateTextAndPosition(uI.note, "Set a new record!!!");
 			break;
 		}
 		}
@@ -106,19 +122,23 @@ namespace ApplesGame
 		{
 			uI.menuItems[i].isActive = false;
 		}
+		uI.showLeaderboard = false;
 		switch (uI.menuState)
 		{
 		case MenuState::MainMenu:
 		{
 			UpdateTextAndPosition(uI.title, "Apples Game!");
+			SetMenuItemsPosition(uI, .0f, .0f);
 			SetMenuItem(uI.menuItems[0], "Start game", MenuItemType::StartGame);
 			SetMenuItem(uI.menuItems[1], "Game mode", MenuItemType::GameMode);
-			SetMenuItem(uI.menuItems[2], "Exit game", MenuItemType::ExitGame);
+			SetMenuItem(uI.menuItems[2], "Leaderboard", MenuItemType::Leaderboard);
+			SetMenuItem(uI.menuItems[3], "Exit game", MenuItemType::ExitGame);
 			break;
 		}
 		case MenuState::GameModeMenu:
 		{
-			UpdateTextAndPosition(uI.title, "Game mode");;
+			UpdateTextAndPosition(uI.title, "Game mode");
+			SetMenuItemsPosition(uI, .0f, .0f);
 			SetMenuItem(uI.menuItems[0], "Randomize", MenuItemType::RandomizeGameMode);
 			SetMenuItem(uI.menuItems[1], "Infinite Apples", MenuItemType::InfiniteApples);
 			SetMenuItem(uI.menuItems[2], "Accelerate Player", MenuItemType::AcceleratePlayer);
@@ -132,6 +152,7 @@ namespace ApplesGame
 		case MenuState::PauseMenu:
 		{
 			UpdateTextAndPosition(uI.title, "Pause");
+			SetMenuItemsPosition(uI, .0f, .0f);
 			SetMenuItem(uI.menuItems[0], "Continue game", MenuItemType::ContinueGame);
 			SetMenuItem(uI.menuItems[1], "Restart game", MenuItemType::StartGame);
 			SetMenuItem(uI.menuItems[2], "Back to main menu", MenuItemType::BackMainMenu);
@@ -140,10 +161,20 @@ namespace ApplesGame
 		}
 		case MenuState::GameOverMenu:
 		{
+			uI.showLeaderboard = true;
+			SetMenuItemsPosition(uI, .0f, 300.0f);
 			UpdateTextAndPosition(uI.title, "GAME OVER");
 			SetMenuItem(uI.menuItems[0], "Restart game", MenuItemType::StartGame);
 			SetMenuItem(uI.menuItems[1], "Back to main menu", MenuItemType::BackMainMenu);
 			SetMenuItem(uI.menuItems[2], "Exit game", MenuItemType::ExitGame);
+			break;
+		}
+		case MenuState::LeaderboardMenu:
+		{
+			uI.showLeaderboard = true;
+			SetMenuItemsPosition(uI, .0f, 300.0f);
+			UpdateTextAndPosition(uI.title, "Leaderboard");
+			SetMenuItem(uI.menuItems[0], "Back", MenuItemType::BackMainMenu);
 			break;
 		}
 		}
@@ -159,6 +190,13 @@ namespace ApplesGame
 			if (uI.menuItems[i].isActive)
 			{
 				window.draw(uI.menuItems[i].text);
+			}
+		}
+		if (uI.showLeaderboard)
+		{
+			for (int i = 0; i < LEADERBOARD_DISPLAY_SIZE; i++)
+			{
+				window.draw(uI.leaderboardItems[i]);
 			}
 		}
 	}
@@ -197,6 +235,35 @@ namespace ApplesGame
 		do {
 			uI.menuSelectedItem = (uI.menuSelectedItem + 1) % NUM_MENU_ITEMS;
 		} while (!uI.menuItems[uI.menuSelectedItem].isActive);
+	}
+
+	void SetMenuItemsPosition(UI& uI, float shiftX, float shiftY)
+	{
+		for (int i = 0; i < NUM_MENU_ITEMS; i++)
+		{
+			SetTextScreenRelativePosition(uI.menuItems[i].text, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.4f);
+			ShiftTextPozition(uI.menuItems[i].text, shiftX + 0.f , shiftY + (42.f * i));
+		}
+	}
+
+	void LoadLeaderboard(UI& uI, const Game& game)
+	{
+		for (int i = 0; i < LEADERBOARD_DISPLAY_SIZE; i++)
+		{
+			Vector2D relativePosition = GetTextScreenRelativePosition(uI.leaderboardItems[i], SCREEN_WIDTH, SCREEN_HEIGHT);
+			Vector2D relativeOrigin = GetTextRelativeOrigin(uI.leaderboardItems[i]);
+
+			std::string textString = game.leaderboard[i].name + ".";
+			do
+			{
+				uI.leaderboardItems[i].setString(textString + std::to_string(game.leaderboard[i].score));
+				textString = textString + ".";
+
+			} while (uI.leaderboardItems[i].getLocalBounds().width < LEADERBOARD_WIDTH);
+
+			SetTextRelativeOrigin(uI.leaderboardItems[i], relativeOrigin.x, relativeOrigin.y);
+			SetTextScreenRelativePosition(uI.leaderboardItems[i], SCREEN_WIDTH, SCREEN_HEIGHT, relativePosition.x, relativePosition.y);
+		}
 	}
 }
 
