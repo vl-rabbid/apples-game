@@ -31,8 +31,6 @@ namespace ApplesGame
 
 	void InitGameMode(uint32_t& gameMode);
 
-	void InitLeaderboard(std::vector<Record>& leaderboard);
-
 	void RandomizeGameMode(uint32_t& gameMode);
 
 	void SwitchGameModeFlag(uint32_t& gameMode, const GameModeFlag& gameModeFlag);

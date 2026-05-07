@@ -27,6 +27,7 @@ namespace ApplesGame
 		case GameState::MainMenu:
 		{
 			SetMenuState(game.uI, MenuState::MainMenu);
+			LoadLeaderboard(game.uI, game);
 			break;
 		}
 		case GameState::GameLoop:
@@ -42,6 +43,7 @@ namespace ApplesGame
 		{
 			PlaySound(game, game.deathSound);
 			SetMenuState(game.uI, MenuState::GameOverMenu);
+			LoadLeaderboard(game.uI, game);
 			break;
 		}
 		case GameState::ExitGame:
@@ -163,6 +165,14 @@ namespace ApplesGame
 
 		// Load font 
 		assert(game.font.loadFromFile(RESOURCES_PATH + "\\Fonts/Roboto-Regular.ttf"));
+
+		// Init leaderboard
+		game.leaderboard.clear();
+		game.leaderboard.push_back({ "Alice", GetRandomInt(1000,5000) });
+		game.leaderboard.push_back({ "Bob", GetRandomInt(1000,5000) });
+		game.leaderboard.push_back({ "Carol", GetRandomInt(1000,5000) });
+		game.leaderboard.push_back({ "Dave", GetRandomInt(1000,5000) });
+		game.leaderboard.push_back({ "John", GetRandomInt(1000,5000) });
 
 		game.apples = nullptr;
 		game.stones = nullptr;
@@ -328,6 +338,11 @@ namespace ApplesGame
 		case MenuItemType::RandomizeGameMode:
 		{
 			RandomizeGameMode(game.gameMode);
+			break;
+		}
+		case MenuItemType::Leaderboard:
+		{
+			SetMenuState(game.uI, MenuState::LeaderboardMenu);
 			break;
 		}
 		}
