@@ -27,7 +27,6 @@ namespace ApplesGame
 		case GameState::MainMenu:
 		{
 			SetMenuState(game.uI, MenuState::MainMenu);
-			LoadLeaderboard(game.uI, game);
 			break;
 		}
 		case GameState::GameLoop:
@@ -43,6 +42,7 @@ namespace ApplesGame
 		{
 			PlaySound(game, game.deathSound);
 			SetMenuState(game.uI, MenuState::GameOverMenu);
+			SortLeaderboard(game.leaderboard);
 			LoadLeaderboard(game.uI, game);
 			break;
 		}
@@ -168,11 +168,12 @@ namespace ApplesGame
 
 		// Init leaderboard
 		game.leaderboard.clear();
-		game.leaderboard.push_back({ "Alice", GetRandomInt(1000,5000) });
-		game.leaderboard.push_back({ "Bob", GetRandomInt(1000,5000) });
-		game.leaderboard.push_back({ "Carol", GetRandomInt(1000,5000) });
-		game.leaderboard.push_back({ "Dave", GetRandomInt(1000,5000) });
-		game.leaderboard.push_back({ "John", GetRandomInt(1000,5000) });
+		game.leaderboard.push_back({ "Alice", GetRandomInt(1000,10000) });
+		game.leaderboard.push_back({ "Bob", GetRandomInt(1000,10000) });
+		game.leaderboard.push_back({ "Carol", GetRandomInt(1000,10000) });
+		game.leaderboard.push_back({ "Dave", GetRandomInt(1000,10000) });
+		game.leaderboard.push_back({ "John", GetRandomInt(1000,10000) });
+		SortLeaderboard(game.leaderboard);
 
 		game.apples = nullptr;
 		game.stones = nullptr;

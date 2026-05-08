@@ -58,6 +58,7 @@ namespace ApplesGame
 			SetTextScreenRelativePosition(uI.leaderboardItems[i], SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.4f);
 			ShiftTextPozition(uI.leaderboardItems[i], 0.f, 42.f * i);
 		}
+		LoadLeaderboard(uI, game);
 	}
 
 	void UpdateHUD(UI& uI, const Game& game)
@@ -105,7 +106,7 @@ namespace ApplesGame
 		}
 		case MenuState::GameOverMenu:
 		{
-			UpdateTextAndPosition(uI.note, "Leaderboard");
+			UpdateTextAndPosition(uI.note, "Final score: " + std::to_string(game.playerScore));
 			break;
 		}
 		case MenuState::LeaderboardMenu:

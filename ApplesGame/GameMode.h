@@ -50,4 +50,6 @@ namespace ApplesGame
 	float GetScoreMultiplier(uint32_t gameMode);
 
 	bool isGameModeConsistent(uint32_t gameMode);
+
+	void SortLeaderboard(std::vector<Record>& leaderboard);
 }
