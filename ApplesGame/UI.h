@@ -8,7 +8,7 @@ namespace ApplesGame
 	struct UI
 	{
 		// HUD
-		sf::Text score;
+		sf::Text playerScore;
 
 		// Menus
 		sf::Text title;
@@ -17,6 +17,12 @@ namespace ApplesGame
 		MenuState menuState{};
 		MenuItem menuItems[NUM_MENU_ITEMS];
 		sf::RectangleShape tint;
+
+		// Leaderboard
+		bool showLeaderboard = false;
+		sf::Text leaderboardItems[LEADERBOARD_DISPLAY_SIZE];
+		bool showNewRecordText = false;
+		sf::Text newRecord;
 	};
 
 	struct Game;
@@ -27,7 +33,7 @@ namespace ApplesGame
 
 	void DrawHUD(UI& uI, sf::RenderWindow& window);
 
-	void UpdateMenu(UI& uI, const Game& game);
+	void UpdateMenu(UI& uI, const Game& game, const float deltaTime);
 
 	void LoadNewMenu(UI& uI);
 
@@ -42,4 +48,10 @@ namespace ApplesGame
 	void MoveMenuUp(UI& uI);
 
 	void MoveMenuDown(UI& uI);
+
+	void SetMenuItemsPosition(UI& uI, float shiftX, float shiftY);
+
+	void LoadLeaderboard(UI& uI, const Game& game);
+
+	void UpdateBlinkText(sf::Text& text, const float blinkInterval, const float deltaTime);
 }

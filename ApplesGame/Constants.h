@@ -4,8 +4,8 @@
 namespace ApplesGame
 {
 	const std::string RESOURCES_PATH = "Resources/";
-	const int SCREEN_WIDTH = 800;
-	const int SCREEN_HEIGHT = 600;
+	const int SCREEN_WIDTH = 1000;
+	const int SCREEN_HEIGHT = 750;
 	const float INITIAL_SPEED = 100.f; // Pixel per second
 	const float ACCELERATION = 20.f; // Acceleration per apple eaten
 	const float PLAYER_SIZE = 20.f;
@@ -18,4 +18,7 @@ namespace ApplesGame
 	const int POINTS_FOR_APPLE = 100;
 	const float STONE_SIZE = 15.f;
 	const int NUM_MENU_ITEMS = 8;
+	const int LEADERBOARD_DISPLAY_SIZE = 5;
+	const float LEADERBOARD_WIDTH = 500.f;
+	const std::string PLAYER_NAME = "Player";
 }
