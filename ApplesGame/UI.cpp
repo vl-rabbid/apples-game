@@ -266,7 +266,13 @@ namespace ApplesGame
 
 	void LoadLeaderboard(UI& uI, const Game& game)
 	{
-		for (int i = 0; i < LEADERBOARD_DISPLAY_SIZE; i++)
+		int displayCount = LEADERBOARD_DISPLAY_SIZE;
+		if (game.leaderboard.size() < LEADERBOARD_DISPLAY_SIZE)
+		{
+			displayCount = game.leaderboard.size();
+		}
+
+		for (int i = 0; i < displayCount; i++)
 		{
 			Vector2D relativePosition = GetTextScreenRelativePosition(uI.leaderboardItems[i], SCREEN_WIDTH, SCREEN_HEIGHT);
 			Vector2D relativeOrigin = GetTextRelativeOrigin(uI.leaderboardItems[i]);
