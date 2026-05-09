@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 namespace sf
 {
@@ -50,4 +51,6 @@ namespace ApplesGame
 	bool rollChance(float percent);
 
 	std::string BoolToString(const bool& flag);
+
+	void SortLeaderboardDesc(std::vector<std::pair<std::string, int>>& leaderboard);
 }
