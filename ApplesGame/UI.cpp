@@ -266,10 +266,13 @@ namespace ApplesGame
 
 	void LoadLeaderboard(UI& uI, const Game& game)
 	{
-		int displayCount = LEADERBOARD_DISPLAY_SIZE;
-		if (game.leaderboard.size() < LEADERBOARD_DISPLAY_SIZE)
+		std::vector<std::pair<std::string, int>> leaderboard(game.leaderboard.begin(), game.leaderboard.end());
+		SortLeaderboardDesc(leaderboard);
+
+		size_t displayCount = LEADERBOARD_DISPLAY_SIZE;
+		if (leaderboard.size() < LEADERBOARD_DISPLAY_SIZE)
 		{
-			displayCount = game.leaderboard.size();
+			displayCount = leaderboard.size();
 		}
 
 		for (int i = 0; i < displayCount; i++)
@@ -277,10 +280,10 @@ namespace ApplesGame
 			Vector2D relativePosition = GetTextScreenRelativePosition(uI.leaderboardItems[i], SCREEN_WIDTH, SCREEN_HEIGHT);
 			Vector2D relativeOrigin = GetTextRelativeOrigin(uI.leaderboardItems[i]);
 
-			std::string textString = game.leaderboard[i].name + ".";
+			std::string textString = leaderboard[i].first + ".";
 			do
 			{
-				uI.leaderboardItems[i].setString(textString + std::to_string(game.leaderboard[i].score));
+				uI.leaderboardItems[i].setString(textString + std::to_string(leaderboard[i].second));
 				textString = textString + ".";
 
 			} while (uI.leaderboardItems[i].getLocalBounds().width < LEADERBOARD_WIDTH);

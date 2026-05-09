@@ -8,6 +8,7 @@
 #include "GameMode.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <unordered_map>
 
 namespace ApplesGame
 {
@@ -26,7 +27,7 @@ namespace ApplesGame
 		GameState gameState{};
 		uint32_t gameMode = 0;
 		int playerScore = 0;
-		std::vector<Record> leaderboard;
+		std::unordered_map<std::string, int> leaderboard;
 
 		//Resources
 		sf::Texture playerTexture;
