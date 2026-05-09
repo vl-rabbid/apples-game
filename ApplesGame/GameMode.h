@@ -1,6 +1,5 @@
 #pragma once
 #include "Math.h"
-#include <vector>
 
 namespace ApplesGame
 {
@@ -10,12 +9,6 @@ namespace ApplesGame
 		uint32_t mask;
 		uint8_t max_value;
 		uint8_t min_value;
-	};
-
-	struct Record
-	{
-		std::string name;
-		int score;
 	};
 
 	extern const GameModeNum NumberOfApples;
@@ -50,6 +43,4 @@ namespace ApplesGame
 	float GetScoreMultiplier(uint32_t gameMode);
 
 	bool isGameModeConsistent(uint32_t gameMode);
-
-	void SortLeaderboard(std::vector<Record>& leaderboard);
 }
