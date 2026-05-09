@@ -20,4 +20,5 @@ namespace ApplesGame
 	const int NUM_MENU_ITEMS = 8;
 	const int LEADERBOARD_DISPLAY_SIZE = 5;
 	const float LEADERBOARD_WIDTH = 500.f;
+	const std::string PLAYER_NAME = "Player";
 }

@@ -74,4 +74,6 @@ namespace ApplesGame
 	void FreeStoneMemoryAllocation(Game& game);
 
 	void DeinitializeGame(Game& game, sf::RenderWindow& window);
+
+	void UpdatePlayerScore(Game& game);
 }
