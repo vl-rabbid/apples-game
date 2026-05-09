@@ -43,7 +43,6 @@ namespace ApplesGame
 			PlaySound(game, game.deathSound);
 			SetMenuState(game.uI, MenuState::GameOverMenu);
 			UpdatePlayerScore(game);
-			SortLeaderboard(game.leaderboard);
 			LoadLeaderboard(game.uI, game);
 			break;
 		}
@@ -169,12 +168,11 @@ namespace ApplesGame
 
 		// Init leaderboard
 		game.leaderboard.clear();
-		game.leaderboard.push_back({ "Alice", GetRandomInt(1000,5000) });
-		game.leaderboard.push_back({ "Bob", GetRandomInt(1000,5000) });
-		game.leaderboard.push_back({ "Carol", GetRandomInt(1000,5000) });
-		game.leaderboard.push_back({ "Dave", GetRandomInt(1000,5000) });
-		game.leaderboard.push_back({ "John", GetRandomInt(1000,5000) });
-		SortLeaderboard(game.leaderboard);
+		game.leaderboard["Alice"] = GetRandomInt(1000, 5000);
+		game.leaderboard["Bob"] = GetRandomInt(1000, 5000);
+		game.leaderboard["Carol"] = GetRandomInt(1000, 5000);
+		game.leaderboard["Dave"] = GetRandomInt(1000, 5000);
+		game.leaderboard["John"] = GetRandomInt(1000, 5000);
 
 		game.apples = nullptr;
 		game.stones = nullptr;
@@ -413,22 +411,18 @@ namespace ApplesGame
 
 	void UpdatePlayerScore(Game& game)
 	{
-		bool isPlayerFound = false;
-		for (Record& entry : game.leaderboard)
+		auto entry = game.leaderboard.find(PLAYER_NAME);
+		if (entry != game.leaderboard.end())
 		{
-			if (entry.name == PLAYER_NAME)
+			if (game.playerScore > entry->second)
 			{
-				isPlayerFound = true;
-				if (game.playerScore > entry.score)
-				{
-					entry.score = game.playerScore;
-					game.uI.showNewRecordText = true;
-				}
-				break;
+				entry->second = game.playerScore;
+				game.uI.showNewRecordText = true;
 			}
 		}
-		if (!isPlayerFound) {
-			game.leaderboard.push_back({ PLAYER_NAME, game.playerScore });
+		else
+		{
+			game.leaderboard[PLAYER_NAME] = game.playerScore;
 			game.uI.showNewRecordText = true;
 		}
 	}

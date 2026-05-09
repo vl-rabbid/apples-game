@@ -174,18 +174,5 @@ namespace ApplesGame
 		}
 		return true;
 	}
-
-	void SortLeaderboard(std::vector<Record>& leaderboard) 
-	{
-		for (unsigned int i = 1; i < leaderboard.size(); ++i) 
-		{
-			unsigned int j = i;
-			while (j > 0 && leaderboard[j - 1].score < leaderboard[j].score) 
-			{
-				std::swap(leaderboard[j - 1], leaderboard[j]);
-				--j;
-			}
-		}
-	}
 }
 
