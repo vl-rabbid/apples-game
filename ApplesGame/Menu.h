@@ -17,7 +17,8 @@ namespace ApplesGame
 		CollideWithBorders,
 		SpawnSpecialApples,
 		NumberOfApples,
-		NumberOfStones
+		NumberOfStones,
+		Leaderboard
 	};
 
 	enum class MenuState
@@ -25,7 +26,8 @@ namespace ApplesGame
 		MainMenu = 0,
 		GameModeMenu,
 		PauseMenu,
-		GameOverMenu
+		GameOverMenu,
+		LeaderboardMenu
 	};
 
 	struct MenuItem

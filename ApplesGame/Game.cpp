@@ -42,6 +42,9 @@ namespace ApplesGame
 		{
 			PlaySound(game, game.deathSound);
 			SetMenuState(game.uI, MenuState::GameOverMenu);
+			UpdatePlayerScore(game);
+			SortLeaderboard(game.leaderboard);
+			LoadLeaderboard(game.uI, game);
 			break;
 		}
 		case GameState::ExitGame:
@@ -98,7 +101,7 @@ namespace ApplesGame
 		{
 		case GameState::MainMenu:
 		{
-			UpdateMenu(game.uI, game);
+			UpdateMenu(game.uI, game, deltaTime);
 			break;
 		}
 		case GameState::GameLoop:
@@ -109,12 +112,12 @@ namespace ApplesGame
 		}
 		case GameState::Pause:
 		{
-			UpdateMenu(game.uI, game);
+			UpdateMenu(game.uI, game, deltaTime);
 			break;
 		}
 		case GameState::GameOver:
 		{
-			UpdateMenu(game.uI, game);
+			UpdateMenu(game.uI, game, deltaTime);
 			break;
 		}
 		}
@@ -164,6 +167,15 @@ namespace ApplesGame
 		// Load font 
 		assert(game.font.loadFromFile(RESOURCES_PATH + "\\Fonts/Roboto-Regular.ttf"));
 
+		// Init leaderboard
+		game.leaderboard.clear();
+		game.leaderboard.push_back({ "Alice", GetRandomInt(1000,5000) });
+		game.leaderboard.push_back({ "Bob", GetRandomInt(1000,5000) });
+		game.leaderboard.push_back({ "Carol", GetRandomInt(1000,5000) });
+		game.leaderboard.push_back({ "Dave", GetRandomInt(1000,5000) });
+		game.leaderboard.push_back({ "John", GetRandomInt(1000,5000) });
+		SortLeaderboard(game.leaderboard);
+
 		game.apples = nullptr;
 		game.stones = nullptr;
 		InitGameMode(game.gameMode);
@@ -174,7 +186,7 @@ namespace ApplesGame
 
 	void StartGameLoop(Game& game)
 	{
-		game.score = 0;
+		game.playerScore = 0;
 		InitPlayer(game.player, game);
 
 		FreeAppleMemoryAllocation(game);
@@ -207,11 +219,11 @@ namespace ApplesGame
 					
 					if (IsAppleSpecial(*ptrApple))
 					{
-						game.score += (unsigned int)(2.f * (float)POINTS_FOR_APPLE * GetScoreMultiplier(game.gameMode));
+						game.playerScore += (unsigned int)(2.f * (float)POINTS_FOR_APPLE * GetScoreMultiplier(game.gameMode));
 					}
 					else
 					{
-						game.score += (unsigned int)((float)POINTS_FOR_APPLE * GetScoreMultiplier(game.gameMode));
+						game.playerScore += (unsigned int)((float)POINTS_FOR_APPLE * GetScoreMultiplier(game.gameMode));
 					}
 
 					if (IsGameModeFlagOn(game.gameMode, GameModeFlag::AcceleratePlayer) && !(IsAppleSpecial(*ptrApple)))
@@ -330,6 +342,11 @@ namespace ApplesGame
 			RandomizeGameMode(game.gameMode);
 			break;
 		}
+		case MenuItemType::Leaderboard:
+		{
+			SetMenuState(game.uI, MenuState::LeaderboardMenu);
+			break;
+		}
 		}
 	}
 
@@ -392,5 +409,27 @@ namespace ApplesGame
 		FreeAppleMemoryAllocation(game);
 		FreeStoneMemoryAllocation(game);
 		window.close();
+	}
+
+	void UpdatePlayerScore(Game& game)
+	{
+		bool isPlayerFound = false;
+		for (Record& entry : game.leaderboard)
+		{
+			if (entry.name == PLAYER_NAME)
+			{
+				isPlayerFound = true;
+				if (game.playerScore > entry.score)
+				{
+					entry.score = game.playerScore;
+					game.uI.showNewRecordText = true;
+				}
+				break;
+			}
+		}
+		if (!isPlayerFound) {
+			game.leaderboard.push_back({ PLAYER_NAME, game.playerScore });
+			game.uI.showNewRecordText = true;
+		}
 	}
 }
