@@ -42,6 +42,7 @@ namespace ApplesGame
 		{
 			PlaySound(game, game.deathSound);
 			SetMenuState(game.uI, MenuState::GameOverMenu);
+			UpdatePlayerScore(game);
 			SortLeaderboard(game.leaderboard);
 			LoadLeaderboard(game.uI, game);
 			break;
@@ -100,7 +101,7 @@ namespace ApplesGame
 		{
 		case GameState::MainMenu:
 		{
-			UpdateMenu(game.uI, game);
+			UpdateMenu(game.uI, game, deltaTime);
 			break;
 		}
 		case GameState::GameLoop:
@@ -111,12 +112,12 @@ namespace ApplesGame
 		}
 		case GameState::Pause:
 		{
-			UpdateMenu(game.uI, game);
+			UpdateMenu(game.uI, game, deltaTime);
 			break;
 		}
 		case GameState::GameOver:
 		{
-			UpdateMenu(game.uI, game);
+			UpdateMenu(game.uI, game, deltaTime);
 			break;
 		}
 		}
@@ -168,11 +169,11 @@ namespace ApplesGame
 
 		// Init leaderboard
 		game.leaderboard.clear();
-		game.leaderboard.push_back({ "Alice", GetRandomInt(1000,10000) });
-		game.leaderboard.push_back({ "Bob", GetRandomInt(1000,10000) });
-		game.leaderboard.push_back({ "Carol", GetRandomInt(1000,10000) });
-		game.leaderboard.push_back({ "Dave", GetRandomInt(1000,10000) });
-		game.leaderboard.push_back({ "John", GetRandomInt(1000,10000) });
+		game.leaderboard.push_back({ "Alice", GetRandomInt(1000,5000) });
+		game.leaderboard.push_back({ "Bob", GetRandomInt(1000,5000) });
+		game.leaderboard.push_back({ "Carol", GetRandomInt(1000,5000) });
+		game.leaderboard.push_back({ "Dave", GetRandomInt(1000,5000) });
+		game.leaderboard.push_back({ "John", GetRandomInt(1000,5000) });
 		SortLeaderboard(game.leaderboard);
 
 		game.apples = nullptr;
@@ -408,5 +409,27 @@ namespace ApplesGame
 		FreeAppleMemoryAllocation(game);
 		FreeStoneMemoryAllocation(game);
 		window.close();
+	}
+
+	void UpdatePlayerScore(Game& game)
+	{
+		bool isPlayerFound = false;
+		for (Record& entry : game.leaderboard)
+		{
+			if (entry.name == PLAYER_NAME)
+			{
+				isPlayerFound = true;
+				if (game.playerScore > entry.score)
+				{
+					entry.score = game.playerScore;
+					game.uI.showNewRecordText = true;
+				}
+				break;
+			}
+		}
+		if (!isPlayerFound) {
+			game.leaderboard.push_back({ PLAYER_NAME, game.playerScore });
+			game.uI.showNewRecordText = true;
+		}
 	}
 }

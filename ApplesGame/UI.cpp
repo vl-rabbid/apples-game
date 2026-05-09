@@ -59,6 +59,14 @@ namespace ApplesGame
 			ShiftTextPozition(uI.leaderboardItems[i], 0.f, 42.f * i);
 		}
 		LoadLeaderboard(uI, game);
+
+		// Init New Record text
+		uI.newRecord.setString("New personal record!!!");
+		uI.newRecord.setFont(game.font);
+		uI.newRecord.setCharacterSize(35);
+		uI.newRecord.setFillColor(sf::Color::Yellow);
+		SetTextRelativeOrigin(uI.newRecord, 0.5f, 0.5f);
+		SetTextScreenRelativePosition(uI.newRecord, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.30f);
 	}
 
 	void UpdateHUD(UI& uI, const Game& game)
@@ -71,7 +79,7 @@ namespace ApplesGame
 		window.draw(uI.playerScore);
 	}
 
-	void UpdateMenu(UI& uI, const Game& game)
+	void UpdateMenu(UI& uI, const Game& game, const float deltaTime)
 	{
 		for (int i = 0; i < NUM_MENU_ITEMS; i++)
 		{
@@ -106,6 +114,10 @@ namespace ApplesGame
 		}
 		case MenuState::GameOverMenu:
 		{
+			if (uI.showNewRecordText)
+			{
+				UpdateBlinkText(uI.newRecord, 0.3f, deltaTime);
+			}
 			UpdateTextAndPosition(uI.note, "Final score: " + std::to_string(game.playerScore));
 			break;
 		}
@@ -200,6 +212,10 @@ namespace ApplesGame
 				window.draw(uI.leaderboardItems[i]);
 			}
 		}
+		if (uI.showNewRecordText)
+		{
+			window.draw(uI.newRecord);
+		}
 	}
 
 	void UpdateTextAndPosition(sf::Text& text, const std::string string)
@@ -213,6 +229,7 @@ namespace ApplesGame
 
 	void SetMenuState(UI& uI, const MenuState& menuState)
 	{
+		uI.showNewRecordText = false;
 		uI.menuState = menuState;
 		uI.menuSelectedItem = 0;
 		LoadNewMenu(uI);
@@ -264,6 +281,23 @@ namespace ApplesGame
 
 			SetTextRelativeOrigin(uI.leaderboardItems[i], relativeOrigin.x, relativeOrigin.y);
 			SetTextScreenRelativePosition(uI.leaderboardItems[i], SCREEN_WIDTH, SCREEN_HEIGHT, relativePosition.x, relativePosition.y);
+		}
+	}
+
+	void UpdateBlinkText(sf::Text& text, const float blinkInterval, const float deltaTime) {
+		static float blinkAccumulator = 0.f;
+		static bool isRed = true;
+
+		blinkAccumulator += deltaTime;
+		if (blinkAccumulator >= blinkInterval) {
+			blinkAccumulator -= blinkInterval;
+			if (isRed) {
+				text.setFillColor(sf::Color::Yellow);
+			}
+			else {
+				text.setFillColor(sf::Color::Red);
+			}
+			isRed = !isRed;
 		}
 	}
 }
