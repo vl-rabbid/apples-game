@@ -37,8 +37,8 @@ namespace ApplesGame
 		sf::SoundBuffer deathSound;
 
 		Player player;
-		Apple* apples = nullptr;
-		Stone* stones = nullptr;
+		std::vector<Apple> apples;
+		std::vector<Stone> stones;
 		UI uI;
 		sf::Sound sound;
 		sf::Font font;
@@ -69,10 +69,6 @@ namespace ApplesGame
 	void SelectMenuItem(Game& game, const MenuItemType& menuItemType);
 
 	void AdjustMenuItem(Game& game, const MenuItemType& menuItemType, const AdjustmentType& adjustmentType);
-
-	void FreeAppleMemoryAllocation(Game& game);
-
-	void FreeStoneMemoryAllocation(Game& game);
 
 	void DeinitializeGame(Game& game, sf::RenderWindow& window);
 

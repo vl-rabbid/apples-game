@@ -25,7 +25,9 @@ namespace ApplesGame
 		SetTextScreenRelativePosition(uI.note, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.25f);
 
 		// Init Menu Items
-		for (int i = 0; i < NUM_MENU_ITEMS; i++)
+		uI.menuItems.clear();
+		uI.menuItems.resize(NUM_MENU_ITEMS);
+		for (size_t i = 0; i < uI.menuItems.size(); ++i) 
 		{
 			uI.menuItems[i].text.setString("item " + std::to_string(i));
 			uI.menuItems[i].text.setFont(game.font);
@@ -48,7 +50,9 @@ namespace ApplesGame
 
 		//Init Leaderboard
 		uI.showLeaderboard = false;
-		for (int i = 0; i < LEADERBOARD_DISPLAY_SIZE; i++)
+		uI.leaderboardItems.clear();
+		uI.leaderboardItems.resize(LEADERBOARD_DISPLAY_SIZE);
+		for (size_t i = 0; i < uI.leaderboardItems.size(); ++i)
 		{
 			uI.leaderboardItems[i].setString("score " + std::to_string(i));
 			uI.leaderboardItems[i].setFont(game.font);
@@ -81,11 +85,11 @@ namespace ApplesGame
 
 	void UpdateMenu(UI& uI, const Game& game, const float deltaTime)
 	{
-		for (int i = 0; i < NUM_MENU_ITEMS; i++)
+		for (size_t i = 0; i < uI.menuItems.size(); ++i)
 		{
 			uI.menuItems[i].text.setFillColor(sf::Color::Yellow);
 		}
-		uI.menuSelectedItem = uI.menuSelectedItem % NUM_MENU_ITEMS;
+		uI.menuSelectedItem = uI.menuSelectedItem % uI.menuItems.size();
 		uI.menuItems[uI.menuSelectedItem].text.setFillColor(sf::Color::Red);
 
 		switch (uI.menuState)
@@ -131,7 +135,7 @@ namespace ApplesGame
 
 	void LoadNewMenu(UI& uI)
 	{
-		for (int i = 0; i < NUM_MENU_ITEMS; i++)
+		for (size_t i = 0; i < uI.menuItems.size(); ++i)
 		{
 			uI.menuItems[i].isActive = false;
 		}
@@ -198,7 +202,7 @@ namespace ApplesGame
 		window.draw(uI.tint);
 		window.draw(uI.note);
 		window.draw(uI.title);
-		for (int i = 0; i < NUM_MENU_ITEMS; i++)
+		for (size_t i = 0; i < uI.menuItems.size(); ++i)
 		{
 			if (uI.menuItems[i].isActive)
 			{
@@ -207,7 +211,7 @@ namespace ApplesGame
 		}
 		if (uI.showLeaderboard)
 		{
-			for (int i = 0; i < LEADERBOARD_DISPLAY_SIZE; i++)
+			for (size_t i = 0; i < uI.leaderboardItems.size(); ++i)
 			{
 				window.draw(uI.leaderboardItems[i]);
 			}
@@ -237,27 +241,27 @@ namespace ApplesGame
 
 	MenuItemType GetMenuItemType(UI& uI)
 	{
-		uI.menuSelectedItem = uI.menuSelectedItem % NUM_MENU_ITEMS;
+		uI.menuSelectedItem = uI.menuSelectedItem % uI.menuItems.size();
 		return uI.menuItems[uI.menuSelectedItem].itemType;
 	}
 
 	void MoveMenuUp(UI& uI)
 	{
 		do {
-			uI.menuSelectedItem = (uI.menuSelectedItem - 1 + NUM_MENU_ITEMS) % NUM_MENU_ITEMS;
+			uI.menuSelectedItem = (uI.menuSelectedItem - 1 + uI.menuItems.size()) % uI.menuItems.size();
 		} while (!uI.menuItems[uI.menuSelectedItem].isActive);
 	}
 
 	void MoveMenuDown(UI& uI)
 	{
 		do {
-			uI.menuSelectedItem = (uI.menuSelectedItem + 1) % NUM_MENU_ITEMS;
+			uI.menuSelectedItem = (uI.menuSelectedItem + 1) % uI.menuItems.size();
 		} while (!uI.menuItems[uI.menuSelectedItem].isActive);
 	}
 
 	void SetMenuItemsPosition(UI& uI, float shiftX, float shiftY)
 	{
-		for (int i = 0; i < NUM_MENU_ITEMS; i++)
+		for (size_t i = 0; i < uI.menuItems.size(); ++i)
 		{
 			SetTextScreenRelativePosition(uI.menuItems[i].text, SCREEN_WIDTH, SCREEN_HEIGHT, 0.5f, 0.4f);
 			ShiftTextPozition(uI.menuItems[i].text, shiftX + 0.f , shiftY + (42.f * i));
@@ -269,13 +273,13 @@ namespace ApplesGame
 		std::vector<std::pair<std::string, int>> leaderboard(game.leaderboard.begin(), game.leaderboard.end());
 		SortLeaderboardDesc(leaderboard);
 
-		size_t displayCount = LEADERBOARD_DISPLAY_SIZE;
-		if (leaderboard.size() < LEADERBOARD_DISPLAY_SIZE)
+		size_t displayCount = uI.leaderboardItems.size();
+		if (leaderboard.size() < displayCount)
 		{
 			displayCount = leaderboard.size();
 		}
 
-		for (int i = 0; i < displayCount; i++)
+		for (size_t i = 0; i < displayCount; ++i)
 		{
 			Vector2D relativePosition = GetTextScreenRelativePosition(uI.leaderboardItems[i], SCREEN_WIDTH, SCREEN_HEIGHT);
 			Vector2D relativeOrigin = GetTextRelativeOrigin(uI.leaderboardItems[i]);
