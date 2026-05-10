@@ -174,8 +174,6 @@ namespace ApplesGame
 		game.leaderboard["Dave"] = GetRandomInt(1000, 5000);
 		game.leaderboard["John"] = GetRandomInt(1000, 5000);
 
-		game.apples = nullptr;
-		game.stones = nullptr;
 		InitGameMode(game.gameMode);
 		InitUI(game.uI, game);
 		game.sound.setVolume(25.f);
@@ -187,18 +185,18 @@ namespace ApplesGame
 		game.playerScore = 0;
 		InitPlayer(game.player, game);
 
-		FreeAppleMemoryAllocation(game);
-		game.apples = new Apple[GetNumberOfApples(game.gameMode)];
-		for (Apple* ptrApple = game.apples; ptrApple < game.apples + GetNumberOfApples(game.gameMode); ++ptrApple)
+		game.apples.clear();
+		game.apples.resize(GetNumberOfApples(game.gameMode));
+		for (size_t i = 0; i < game.apples.size(); ++i) 
 		{
-			InitApple(*ptrApple, game);
+			InitApple(game.apples[i], game);
 		}
 
-		FreeStoneMemoryAllocation(game);
-		game.stones = new Stone[GetNumberOfStones(game.gameMode)];
-		for (Stone* ptrStone = game.stones; ptrStone < game.stones + GetNumberOfStones(game.gameMode); ++ptrStone)
+		game.stones.clear();
+		game.stones.resize(GetNumberOfStones(game.gameMode));
+		for (size_t i = 0; i < game.stones.size(); ++i) 
 		{
-			InitStone(*ptrStone, game);
+			InitStone(game.stones[i], game);
 		}
 	}
 
@@ -206,16 +204,18 @@ namespace ApplesGame
 	{
 		UpdatePlayerPosition(game.player, deltaTime);
 
-		// Check eaten apples 
-		for (Apple* ptrApple = game.apples; ptrApple < game.apples + GetNumberOfApples(game.gameMode); ++ptrApple)
+		// Check eaten apples
+		
+
+		for (Apple& apple : game.apples)
 		{
-			if (HasPlayerCollidedWithApple(game.player, *ptrApple))
+			if (HasPlayerCollidedWithApple(game.player, apple))
 			{
-				if (!IsAppleEaten(*ptrApple))
+				if (!IsAppleEaten(apple))
 				{
 					PlaySound(game, game.appleEatSound);
 					
-					if (IsAppleSpecial(*ptrApple))
+					if (IsAppleSpecial(apple))
 					{
 						game.playerScore += (unsigned int)(2.f * (float)POINTS_FOR_APPLE * GetScoreMultiplier(game.gameMode));
 					}
@@ -224,17 +224,17 @@ namespace ApplesGame
 						game.playerScore += (unsigned int)((float)POINTS_FOR_APPLE * GetScoreMultiplier(game.gameMode));
 					}
 
-					if (IsGameModeFlagOn(game.gameMode, GameModeFlag::AcceleratePlayer) && !(IsAppleSpecial(*ptrApple)))
+					if (IsGameModeFlagOn(game.gameMode, GameModeFlag::AcceleratePlayer) && !(IsAppleSpecial(apple)))
 					{
 						game.player.speed += ACCELERATION;
 					}
 					if (IsGameModeFlagOn(game.gameMode, GameModeFlag::InfiniteApples))
 					{
-						InitApple(*ptrApple, game);
+						InitApple(apple, game);
 					}
 					else
 					{
-						EatApple(*ptrApple);
+						EatApple(apple);
 					}
 				}
 			}
@@ -250,9 +250,9 @@ namespace ApplesGame
 		}
 
 		// Check stone collision
-		for (Stone* ptrStone = game.stones; ptrStone < game.stones + GetNumberOfStones(game.gameMode); ++ptrStone)
+		for (Stone& stone : game.stones)
 		{
-			if (HasPlayerCollidedWithStone(game.player, *ptrStone))
+			if (HasPlayerCollidedWithStone(game.player, stone))
 			{
 				SetGameState(game, GameState::GameOver);
 			}
@@ -261,13 +261,13 @@ namespace ApplesGame
 
 	void DrawGameLoop(Game& game, sf::RenderWindow& window)
 	{
-		for (Stone* ptrStone = game.stones; ptrStone < game.stones + GetNumberOfStones(game.gameMode); ++ptrStone)
+		for (Stone& stone : game.stones)
 		{
-			DrawStone(*ptrStone, window);
+			DrawStone(stone, window);
 		}
-		for (Apple* ptrApple = game.apples; ptrApple < game.apples + GetNumberOfApples(game.gameMode); ++ptrApple)
+		for (Apple& apple : game.apples)
 		{
-			DrawApple(*ptrApple, window);
+			DrawApple(apple, window);
 		}
 		DrawPlayer(game.player, window);
 	}
@@ -386,26 +386,8 @@ namespace ApplesGame
 		}
 	}
 
-	void FreeAppleMemoryAllocation(Game& game)
-	{
-		if (game.apples != nullptr) {
-			delete[] game.apples;
-			game.apples = nullptr;
-		}
-	}
-
-	void FreeStoneMemoryAllocation(Game& game)
-	{
-		if (game.stones != nullptr) {
-			delete[] game.stones;
-			game.stones = nullptr;
-		}
-	}
-
 	void DeinitializeGame(Game& game, sf::RenderWindow& window)
 	{
-		FreeAppleMemoryAllocation(game);
-		FreeStoneMemoryAllocation(game);
 		window.close();
 	}
 

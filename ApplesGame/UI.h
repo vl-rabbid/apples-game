@@ -13,14 +13,14 @@ namespace ApplesGame
 		// Menus
 		sf::Text title;
 		sf::Text note;
-		int menuSelectedItem = 0;
+		size_t menuSelectedItem = 0;
 		MenuState menuState{};
-		MenuItem menuItems[NUM_MENU_ITEMS];
+		std::vector<MenuItem> menuItems;
 		sf::RectangleShape tint;
 
 		// Leaderboard
 		bool showLeaderboard = false;
-		sf::Text leaderboardItems[LEADERBOARD_DISPLAY_SIZE];
+		std::vector<sf::Text> leaderboardItems;
 		bool showNewRecordText = false;
 		sf::Text newRecord;
 	};
