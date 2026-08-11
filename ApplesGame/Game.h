@@ -24,7 +24,7 @@ namespace ApplesGame
 	struct Game
 	{
 		// Global game data
-		GameState gameState{};
+		GameState gameState;
 		uint32_t gameMode = 0;
 		int playerScore = 0;
 		std::unordered_map<std::string, int> leaderboard;
