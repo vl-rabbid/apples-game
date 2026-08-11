@@ -1,2 +1,2 @@
-This is an educational project for learning game development basics with C++ and SFML
+Educational project for learning game development with C++ and SFML
 
