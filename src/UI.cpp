@@ -1,6 +1,6 @@
 #include "UI.h"
 #include "Game.h"
-#include "Math.h"
+#include "GameMath.h"
 #include <SFML/Graphics.hpp>
 
 namespace ApplesGame

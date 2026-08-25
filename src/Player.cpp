@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "Constants.h"
 #include "Game.h"
-#include "Math.h"
+#include "GameMath.h"
 #include "Apple.h"
 #include "Stone.h"
 #include <cmath>
