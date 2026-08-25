@@ -4,7 +4,7 @@
 #include "Stone.h"
 #include "Constants.h"
 #include "UI.h"
-#include "Math.h"
+#include "GameMath.h"
 #include "GameMode.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>

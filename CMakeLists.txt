@@ -59,5 +59,8 @@ if(WIN32)
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "$<TARGET_FILE:sfml-system>"
             "$<TARGET_FILE_DIR:apples-game>"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "$<TARGET_FILE:sfml-audio>"
+            "$<TARGET_FILE_DIR:apples-game>"
     )
 endif()

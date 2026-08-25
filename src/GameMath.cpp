@@ -1,4 +1,4 @@
-#include "Math.h"
+#include "GameMath.h"
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
 #include <string>
